@@ -1,0 +1,21 @@
+{
+  "name": "alirapi",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Andrea Zago <zago.lux.2011@gmail.com>",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "file-system": "^2.2.2",
+    "https": "^1.0.0",
+    "ip": "^1.1.5",
+    "json-query": "^2.2.2"
+  },
+  "license": "MIT"
+}
