@@ -36,6 +36,76 @@ module.exports = function(app) {
     });
 
     /**
+     *   GET Players by playerid
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
+     */
+
+    app.get('/players/:playerid', (req, res) => {
+
+        // Prendo il pid dalla richiesta
+        const playerid = req.params.playerid;
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Players:playerid request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*playerid~/^' + playerid + '/i]', {data: obj, allowRegexp: true}).value;
+                // Lancio il risultato
+
+                if(result.length > 0){
+                    res.send(result);
+                    console.log("GET Players:playerid request from " + getClientIp(req) + " response: " + result.length + " risultati" )
+                }else{
+                    res.send({"404":"Nessun giocatore trovato"});
+                    console.log("GET Players:playerid request from " + getClientIp(req) + " response: " + "Players not found" )
+                }
+            }
+        });
+    });
+
+    /**
+     *   GET Players by name
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/players/name/Fake --> [{name: "Fake", ....}]
+     */
+
+    app.get('/players/name/:name', (req, res) => {
+
+        // Prendo il pid dalla richiesta
+        const name = req.params.name;
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Players/name:name request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*name~/^' + name + '/i]', {data: obj, allowRegexp: true}).value;
+                // Lancio il risultato
+
+                if(result.length > 0){
+                    res.send(result);
+                    console.log("GET Players/name:name request from " + getClientIp(req) + " response: " + result.length + " risultati" )
+                }else{
+                    res.send({"404":"Nessun giocatore trovato"});
+                    console.log("GET Players/name:name request from " + getClientIp(req) + " response: " + "Players not found" )
+                }
+            }
+        });
+    });
+
+    /**
      *   GET Vehicles by pid
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
