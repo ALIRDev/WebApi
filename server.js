@@ -5,17 +5,17 @@ const routes         = require('./app/api_routes');
 const https          = require('https');
 const fs             = require("file-system");
 
-const options = {
+/*const options = {
     key: fs.readFileSync('/home/andrea/key.pem'),
     cert: fs.readFileSync('/home/andrea/certificate.pem')
-};
+};*/
 
-//app.use(express.static('static'));
+app.use(express.static('static'));
 
-https.createServer(options, (req, res) => {
+/*https.createServer(options, (req, res) => {
     res.writeHead(200);
     res.end('hello world\n');
-}).listen(8001);
+}).listen(8001);*/
 
 const port = 8000;
 const HOST = ip.address();
