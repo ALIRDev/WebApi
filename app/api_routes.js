@@ -193,8 +193,14 @@ module.exports = function(app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Lancio il risultato
-                res.send(obj);
-                console.log("GET Gangs request from " + getClientIp(req) + " response: " + result.length + " risultati" )
+
+                if(result.length > 0){
+
+                    res.send(obj);
+                    console.log("GET All Gangs request from " + getClientIp(req) + " response" );
+
+                }
+
             }
         });
 
@@ -223,8 +229,47 @@ module.exports = function(app) {
                 // Regex di ricerca per nome
                 let result = jsonQuery('rows[**][*name~/^' + gangName + '/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
-                res.send(result);
-                console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati" )
+
+                if(result.length > 0){
+                    res.send(result);
+                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati" );
+                }
+            }
+        });
+
+    });
+
+    /**
+     *   GET Gangs by pid
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
+     */
+
+    app.get('/gangs/id/:playerid', (req, res) => {
+
+        // Prendo il nome dalla richiesta
+        const playerid = req.params.playerid;
+
+        fs.readFile( gangsJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*members~/^' + playerid + '/i]', {data: obj, allowRegexp: true}).value;
+                // Lancio il risultato
+
+                if(result.length > 0){
+
+                    res.send(result);
+                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati" );
+
+                }
+
             }
         });
 
