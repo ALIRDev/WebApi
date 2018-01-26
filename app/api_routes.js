@@ -57,6 +57,12 @@ module.exports = function (app) {
         logger("info", 'Status request', 200, "GET", getClientIp(req));
     });
 
+    app.get('/', (req, res) => {
+        res.send({"ok" : "Sistema online"});
+        console.log("GET request from " + getClientIp(req) + ", system online")
+    });
+
+
     /**
      *   GET Players lenght
      *   @param: req = Url della richiesta
