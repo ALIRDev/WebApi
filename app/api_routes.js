@@ -105,6 +105,8 @@ module.exports = function(app) {
         });
     });
 
+
+
     /**
      *   GET Vehicles by pid
      *   @param: req = Url della richiesta
@@ -183,7 +185,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/gangs --> [{..},{..}]
      */
 
-        app.get('/gangs', (req, res) => {
+        app.get('/gangs/all', (req, res) => {
 
             fs.readFile( gangsJson , fileEncrypt , function (err, data) {
             if (err) {
@@ -192,14 +194,12 @@ module.exports = function(app) {
             }else{
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
+
+                let result = jsonQuery('rows[**][*name~/^/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
 
-                if(result.length > 0){
-
-                    res.send(obj);
-                    console.log("GET All Gangs request from " + getClientIp(req) + " response" );
-
-                }
+                res.send(result);
+                console.log("GET All Gangs request from " + getClientIp(req) + " response" );
 
             }
         });
