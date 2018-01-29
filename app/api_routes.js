@@ -33,12 +33,47 @@ module.exports = function(app) {
         return ipAddress;
     }
 
-    // http://localhost:8000/
-    //
+    /**
+     *   GET System status
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/ --> [{"ok":"Sistema online"}]
+     */
 
     app.get('/', (req, res, next) => {
         res.send({"ok" : "Sistema online"});
         console.log("GET request from " + getClientIp(req) + ", system online")
+    });
+
+    /**
+     *   GET Players lenght
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/players/lenght --> [{56}]
+     */
+
+    app.get('/players/lenght/', (req, res, next) => {
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Players:playerid request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
+                // Lancio il risultato
+
+                let lenght = result.length;
+
+                res.send({lenght});
+                console.log("GET Players/lenght request from " + getClientIp(req) + " response")
+
+            }
+        });
     });
 
     /**
@@ -137,10 +172,8 @@ module.exports = function(app) {
 
                 let sliced = result.slice(0, size);
 
-                console.log(sliced);
-
                 res.send(sliced);
-                console.log("GET Players/list:name request from " + getClientIp(req) + " response: " + sliced.length +  "Players" )
+                console.log("GET Players/list:name request from " + getClientIp(req) + " response: " + sliced.length +  " Players with limiters" )
 
             }
         });
