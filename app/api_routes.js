@@ -59,7 +59,7 @@ module.exports = function(app) {
         fs.readFile( playersJson , fileEncrypt , function (err, data) {
             if (err) {
                 res.send({'500':'Errore durante la richiesta'});
-                console.log("GET Players:playerid request from " + getClientIp(req) + " response: " + "Error" )
+                console.log("GET Players/lenght request from " + getClientIp(req) + " response: " + "Error" )
             }else{
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -179,6 +179,35 @@ module.exports = function(app) {
         });
     });
 
+    /**
+     *   GET Vehicle lenght
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/vehicles/lenght --> [{56}]
+     */
+
+    app.get('/vehicles/lenght/', (req, res, next) => {
+
+        fs.readFile( vehiclesJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Vehicles/lenght request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
+                // Lancio il risultato
+
+                let lenght = result.length;
+
+                res.send({size: lenght});
+                console.log("GET Vehicles/lenght request from " + getClientIp(req) + " response")
+
+            }
+        });
+    });
 
     /**
      *   GET Vehicles by pid
@@ -216,6 +245,36 @@ module.exports = function(app) {
     });
 
     /**
+     *   GET Wanted lenght
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/wanted/lenght --> [{56}]
+     */
+
+    app.get('/wanted/lenght/', (req, res, next) => {
+
+        fs.readFile( wantedJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Wanted/lenght request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
+                // Lancio il risultato
+
+                let lenght = result.length;
+
+                res.send({size: lenght});
+                console.log("GET Wanted/lenght request from " + getClientIp(req) + " response")
+
+            }
+        });
+    });
+
+    /**
      *   GET Wanted by wantedID
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
@@ -246,6 +305,36 @@ module.exports = function(app) {
                     res.send({"404":"Nessun ricercato trovato"});
                     console.log("GET Wanted:wantedID request from " + getClientIp(req) + " response: " + "wanted not found" )
                 }
+            }
+        });
+    });
+
+    /**
+     *   GET Gangs lenght
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/gangs/lenght --> [{56}]
+     */
+
+    app.get('/gangs/lenght/', (req, res, next) => {
+
+        fs.readFile( gangsJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Gangs/lenght request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
+                // Lancio il risultato
+
+                let lenght = result.length;
+
+                res.send({size: lenght});
+                console.log("GET Gangs/lenght request from " + getClientIp(req) + " response")
+
             }
         });
     });
@@ -346,6 +435,36 @@ module.exports = function(app) {
             }
         });
 
+    });
+
+    /**
+     *   GET Users lenght
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/users/lenght --> [{56}]
+     */
+
+    app.get('/users/lenght/', (req, res, next) => {
+
+        fs.readFile( usersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Users/lenght request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
+                // Lancio il risultato
+
+                let lenght = result.length;
+
+                res.send({size: lenght});
+                console.log("GET Users/lenght request from " + getClientIp(req) + " response")
+
+            }
+        });
     });
 
     /**
