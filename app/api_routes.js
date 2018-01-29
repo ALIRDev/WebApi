@@ -13,6 +13,12 @@ const fileEncrypt = "utf8";
 
 module.exports = function(app) {
 
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+
     // Ottengo l'indirizzo ip chiamante
     function getClientIp(req) {
         let ipAddress;
@@ -30,7 +36,7 @@ module.exports = function(app) {
     // http://localhost:8000/
     //
 
-    app.get('/', (req, res) => {
+    app.get('/', (req, res, next) => {
         res.send({"ok" : "Sistema online"});
         console.log("GET request from " + getClientIp(req) + ", system online")
     });
@@ -43,7 +49,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
      */
 
-    app.get('/players/:playerid', (req, res) => {
+    app.get('/players/:playerid', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const playerid = req.params.playerid;
@@ -78,7 +84,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/players/name/Fake --> [{name: "Fake", ....}]
      */
 
-    app.get('/players/name/:name', (req, res) => {
+    app.get('/players/name/:name', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const name = req.params.name;
@@ -115,7 +121,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
      */
 
-    app.get('/vehicles/:pid', (req, res) => {
+    app.get('/vehicles/:pid', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const pid = req.params.pid;
@@ -150,7 +156,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
      */
 
-    app.get('/wanted/:wantedID', (req, res) => {
+    app.get('/wanted/:wantedID', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const wantedID = req.params.wantedID;
@@ -185,7 +191,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/gangs --> [{..},{..}]
      */
 
-        app.get('/gangs/all', (req, res) => {
+        app.get('/gangs/all', (req, res, next) => {
 
             fs.readFile( gangsJson , fileEncrypt , function (err, data) {
             if (err) {
@@ -214,7 +220,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/gangs/Mano --> [{name: "Mano nera", ....}]
      */
 
-    app.get('/gangs/:name', (req, res) => {
+    app.get('/gangs/:name', (req, res, next) => {
 
         // Prendo il nome dalla richiesta
         const gangName = req.params.name;
@@ -247,7 +253,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
      */
 
-    app.get('/gangs/id/:playerid', (req, res) => {
+    app.get('/gangs/id/:playerid', (req, res, next) => {
 
         // Prendo il nome dalla richiesta
         const playerid = req.params.playerid;
@@ -283,7 +289,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
      */
 
-    app.get('/users/:steamid', (req, res) => {
+    app.get('/users/:steamid', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const steamid = req.params.steamid;
