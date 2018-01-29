@@ -161,7 +161,7 @@ module.exports = function(app) {
         fs.readFile( playersJson , fileEncrypt , function (err, data) {
             if (err) {
                 res.send({'500':'Errore durante la richiesta'});
-                console.log("GET Vehicles:pid request from " + getClientIp(req) + " response: " + "Error" )
+                console.log("GET Players:pid request from " + getClientIp(req) + " response: " + "Error" )
             }else{
 
                 // Parse del JSON locale
@@ -463,6 +463,41 @@ module.exports = function(app) {
                 res.send({size: lenght});
                 console.log("GET Users/lenght request from " + getClientIp(req) + " response")
 
+            }
+        });
+    });
+
+    /**
+     *   GET Users by id
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/users/id/3 --> [{id: "3", ....}]
+     */
+
+    app.get('/users/id/:id', (req, res, next) => {
+
+        // Prendo il pid dalla richiesta
+        const id = req.params.id;
+
+        fs.readFile( usersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Users/id/:id request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*id=' + id + ']', {data: obj, allowRegexp: false}).value;
+                // Lancio il risultato
+
+                if(result.length > 0){
+                    res.send(result);
+                    console.log("GET Users/id/:id request from " + getClientIp(req) + " response: " + result.length + " risultati" )
+                }else{
+                    res.send({"404":"Nessun utente trovato"});
+                    console.log("GET Users/id/:id request from " + getClientIp(req) + " response: " + "id not found" )
+                }
             }
         });
     });
