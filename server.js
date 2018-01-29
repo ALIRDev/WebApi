@@ -6,8 +6,8 @@ const https          = require('https');
 const fs             = require("file-system");
 
 const options = {
-    key: fs.readFileSync('/home/andreacw/key.pem'),
-    cert: fs.readFileSync('/home/andreacw/certificate.pem')
+    key: fs.readFileSync('/home/andrea/key.pem'),
+    cert: fs.readFileSync('/home/andrea/certificate.pem')
 };
 
 //app.use(express.static('static'));
