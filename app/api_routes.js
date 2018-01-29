@@ -69,7 +69,7 @@ module.exports = function(app) {
 
                 let lenght = result.length;
 
-                res.send({lenght});
+                res.send({size: lenght});
                 console.log("GET Players/lenght request from " + getClientIp(req) + " response")
 
             }
