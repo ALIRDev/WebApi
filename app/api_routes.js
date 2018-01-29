@@ -111,6 +111,40 @@ module.exports = function(app) {
         });
     });
 
+    /**
+     *   GET Players list
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/players/lists/100 --> [{....}]
+     */
+
+    app.get('/players/lists/:size', (req, res, next) => {
+
+        const size = req.params.size;
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET Vehicles:pid request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][]', {data: obj, allowRegexp: true}).value;
+                // Lancio il risultato
+
+                let sliced = result.slice(0, size);
+
+                console.log(sliced);
+
+                res.send(sliced);
+                console.log("GET Players/list:name request from " + getClientIp(req) + " response: " + sliced.length +  "Players" )
+
+            }
+        });
+    });
 
 
     /**
@@ -201,7 +235,7 @@ module.exports = function(app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
 
-                let result = jsonQuery('rows[**][*name~/^/i]', {data: obj, allowRegexp: true}).value;
+                let result = jsonQuery('rows[**][]', {data: obj}).value;
                 // Lancio il risultato
 
                 res.send(result);
