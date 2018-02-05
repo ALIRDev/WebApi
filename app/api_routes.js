@@ -230,8 +230,13 @@ module.exports = function(app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*pid~/^' + pid + '/i]', {data: obj, allowRegexp: true}).value;
+                let result = jsonQuery('rows[**][*pid~/' + pid + '/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
+
+                if(err){
+                    res.send({"500":"Errore"});
+                    console.log(err);
+                }
 
                 if(result.length > 0){
                     res.send(result);
