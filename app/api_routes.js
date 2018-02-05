@@ -508,6 +508,60 @@ module.exports = function(app) {
     });
 
     /**
+     *   GET List by cop
+     *   @param: req = Url della richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/lists/cop --> [{coplevel: "3", ....}]
+     */
+
+    app.get('/lists/cop/', (req, res, next) => {
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET List/cop request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                let level = "5";
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*coplevel!=0]', {data: obj, allowRegexp: false}).value;
+                // Lancio il risultato
+
+                res.send(result);
+                console.log("GET Lists:cop request from " + getClientIp(req))
+            }
+        });
+    });
+
+    /**
+     *   GET List by med
+     *   @param: req = Url della richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/lists/med --> [{mediclevel: "3", ....}]
+     */
+
+    app.get('/lists/med/', (req, res, next) => {
+
+        fs.readFile( playersJson , fileEncrypt , function (err, data) {
+            if (err) {
+                res.send({'500':'Errore durante la richiesta'});
+                console.log("GET List/med request from " + getClientIp(req) + " response: " + "Error" )
+            }else{
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                let level = "5";
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*mediclevel!=0]', {data: obj, allowRegexp: false}).value;
+                // Lancio il risultato
+
+                res.send(result);
+                console.log("GET Lists:med request from " + getClientIp(req))
+            }
+        });
+    });
+
+    /**
      *   GET Users by pid
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
