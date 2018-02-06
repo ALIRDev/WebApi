@@ -41,7 +41,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/ --> [{"ok":"Sistema online"}]
      */
 
-    app.get('/', (req, res, next) => {
+    app.get('/status', (req, res, next) => {
         res.send({"ok" : "Sistema online"});
         console.log("GET request from " + getClientIp(req) + ", system online")
     });

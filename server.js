@@ -8,8 +8,6 @@ const HOST = ip.address();
 
 app.listen(port, HOST);
 
-
-
 let weblogo ="\n" +
     "\n" +
     "           _      _____ _____   __          __  _                   _ \n" +
@@ -26,7 +24,5 @@ let weblogo ="\n" +
 console.log(weblogo);
 
 console.log(`In esecuzione su http://${HOST}:${port}`);
-
-console.log(`Effettua una GET su http://${HOST}:${port}/ per ottenere lo stato del servizio`);
 
 routes(app);
