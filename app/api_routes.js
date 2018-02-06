@@ -352,7 +352,7 @@ module.exports = function(app) {
      *   @example: http://192.168.30.77:8000/gangs --> [{..},{..}]
      */
 
-        app.get('/gangs/all', (req, res, next) => {
+        app.get('/gangs/', (req, res, next) => {
 
             fs.readFile( gangsJson , fileEncrypt , function (err, data) {
             if (err) {
@@ -362,10 +362,9 @@ module.exports = function(app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
 
-                let result = jsonQuery('rows[**][]', {data: obj}).value;
-                // Lancio il risultato
+                let allData = jsonQuery('rows[**][]', {data: obj, allowRegexp: false}).value;
 
-                res.send(result);
+                res.send(allData);
                 console.log("GET All Gangs request from " + getClientIp(req) + " response" );
 
             }
@@ -400,6 +399,11 @@ module.exports = function(app) {
                 if(result.length > 0){
                     res.send(result);
                     console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati" );
+                }else{
+
+                    res.send({404 : "not found"});
+
+                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: 404")
                 }
             }
         });
