@@ -350,7 +350,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                console.log("GET Gangs/lenght request from " + getClientIp(req) + " response: " + "Error")
+                logger("error", 'Gangs lenght request', 500, "GET", getClientIp(req))
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -361,7 +361,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                console.log("GET Gangs/lenght request from " + getClientIp(req) + " response")
+                logger("info", 'Gangs lenght request', 200, "GET", getClientIp(req))
 
             }
         });
@@ -380,7 +380,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                console.log("GET Gangs request from " + getClientIp(req) + " response: " + "Error")
+                logger("error", 'Gangs list request', 500, "GET", getClientIp(req))
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -397,7 +397,7 @@ module.exports = function (app) {
                 }
 
                 res.send(array);
-                console.log("GET All Gangs request from " + getClientIp(req) + " response");
+                logger("info", 'Gangs list request', 200, "GET", getClientIp(req))
 
             }
         });
@@ -420,7 +420,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + "Error")
+                logger("error", 'Gangs request by name', 500, "GET", getClientIp(req))
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -430,12 +430,11 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati");
+                    logger("info", 'Gangs request by name', 200, "GET", getClientIp(req))
                 } else {
 
                     res.send({404: "not found"});
-
-                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: 404")
+                    logger("info", 'Gangs request by name', 404, "GET", getClientIp(req))
                 }
             }
         });
@@ -458,7 +457,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + "Error")
+                logger("error", 'Gangs request filter members', 500, "GET", getClientIp(req))
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -477,7 +476,7 @@ module.exports = function (app) {
 
                         if (subres.members[y] === playerid) {
                             finalName = subres;
-                            console.log("GET Gangs/id/:playerid request from " + getClientIp(req) + " response: " + subval);
+                            logger("info", 'Gangs request filter members', 200, "GET", getClientIp(req));
                             // impedisco ulteriori risultati
                             break;
                         }
