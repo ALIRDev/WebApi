@@ -468,9 +468,7 @@ module.exports = function (app) {
 
                 }
 
-                let arrayMaker = [finalName];
-
-                res.send(arrayMaker);
+                res.send(finalName);
             }
 
         });
