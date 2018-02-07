@@ -455,7 +455,8 @@ module.exports = function(app) {
                         if(subres.members[y] === playerid){
                            finalName = subres;
                            console.log("GET Gangs/id/:playerid request from " + getClientIp(req) + " response: " + subval);
-                            break;
+                           // impedisco ulteriori risultati
+                           break;
                         }
                     }
 
