@@ -130,12 +130,12 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                console.log("GET Players/name:name request from " + getClientIp(req) + " response: " + "Error")
+                console.log("GET Players/name/:name request from " + getClientIp(req) + " response: " + "Error")
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*name~/^' + name + '/i]', {data: obj, allowRegexp: true}).value;
+                let result = jsonQuery('rows[**][*name~/' + name + '/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
 
                 if (result.length > 0) {
