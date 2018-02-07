@@ -440,17 +440,37 @@ module.exports = function(app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*members~/^' + playerid + '/i]', {data: obj, allowRegexp: true}).value;
+                let result = jsonQuery('rows[**][]', {data: obj, allowRegexp: false}).value;
                 // Lancio il risultato
 
-                if(result.length > 0){
+                let finalName;
 
-                    res.send(result);
-                    console.log("GET Gangs:name request from " + getClientIp(req) + " response: " + result.length + " risultati" );
+                for(let i = result.length - 1; i >= 0; i--) {
+
+                    let subval = result[i].name;
+                    let subres = result[i];
+
+                    for(let y = subres.members.length - 1; y >= 0; y--) {
+
+                        if(subres.members[y] === playerid){
+                           finalName = subres;
+                           console.log("GET Gangs/id/:playerid request from " + getClientIp(req) + " response: " + subval);
+                            break;
+                        }
+                    }
 
                 }
 
+                let arrayMaker = [finalName];
+
+                if(arrayMaker[0].length > 0){
+                    res.send(arrayMaker);
+                }else{
+                    res.send({});
+                }
+
             }
+
         });
 
     });
