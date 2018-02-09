@@ -11,6 +11,7 @@
     "nodemon": "^1.14.11"
   },
   "dependencies": {
+    "ajax-request": "^1.2.3",
     "express": "^4.16.2",
     "file-system": "^2.2.2",
     "https": "^1.0.0",

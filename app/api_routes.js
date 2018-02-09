@@ -1,6 +1,7 @@
 const fs = require("file-system");
 const jsonQuery = require('json-query');
 const winston = require('winston');
+const request = require('ajax-request');
 
 // Path file-system
 const playersJson = "/alirdb/player.json";
@@ -646,7 +647,36 @@ module.exports = function (app) {
                 }
             }
         });
-    })
+    });
+
+    /**
+     *   GET System status
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/jhonny/live/embed --> [{"ok":"Sistema online"}]
+     */
+
+    app.get('/jhonny/live/embed', (req, res, next) => {
+
+        request({
+            url: 'https://www.googleapis.com/youtube/v3/search',
+            method: 'GET',
+            data: {
+                part: 'snippet',
+                channelId: 'UCHfZlJ0hl47QH8DGmnIRjoA',
+                key: 'AIzaSyA3C-U46hytCRtFgU_nld_Zh_yF2jd5jnE',
+                eventType: 'live',
+                type: 'video'
+            }
+        }, function(err, res, body) {
+            console.log(body);
+            // TODO: Per completare la richiesta è necessario essere https :(
+        });
+
+        res.send({"ok": "Sistema online"});
+        logger("info", 'Status request', 200, "GET", getClientIp(req));
+    });
 
 };
 
