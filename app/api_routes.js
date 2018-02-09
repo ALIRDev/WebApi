@@ -11,6 +11,7 @@ const usersJson = "/alirdb/users.json";
 const fileEncrypt = "utf8";
 
 // TODO: HTTPS Request
+// TODO: Request counter
 
 module.exports = function (app) {
 
