@@ -735,7 +735,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations?userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908
+     *   @example: http://192.168.30.77:8000/donations?userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908&donationAmount=5
      */
 
     app.post('/donations', (req, res) => {
@@ -747,6 +747,7 @@ module.exports = function (app) {
         const expirationDate = req.param('expirationDate');
         const userSteamId = req.param('userSteamId');
         const adminNotes = req.param('adminNotes');
+        const donationAmount = req.param('donationAmount');
 
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
@@ -758,6 +759,7 @@ module.exports = function (app) {
                 donationDate: donationDate,
                 expirationDate: expirationDate,
                 userSteamId: userSteamId,
+                donationAmount: donationAmount,
                 adminNotes: adminNotes
             };
 
