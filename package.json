@@ -11,11 +11,13 @@
     "nodemon": "^1.14.11"
   },
   "dependencies": {
+    "ajax-request": "^1.2.3",
     "express": "^4.16.2",
     "file-system": "^2.2.2",
     "https": "^1.0.0",
     "ip": "^1.1.5",
-    "json-query": "^2.2.2"
+    "json-query": "^2.2.2",
+    "winston": "^2.4.0"
   },
   "license": "MIT"
 }
