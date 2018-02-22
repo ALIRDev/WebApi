@@ -729,8 +729,8 @@ module.exports = function (app) {
     });
 
     /**
-     *   GET Request on collection donator on MongoDB
-     *   Ottengo tutti i donatori nella collection donator
+     *   POST Request on collection donator on MongoDB
+     *   Aggiungo un donatore nella collection active
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti

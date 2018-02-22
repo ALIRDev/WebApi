@@ -27,4 +27,6 @@ app.use(basicAuth({
     unauthorizedResponse: getUnauthorizedResponse
 }));
 
+// TODO: In base all'utente loggato disabilitare ed abilitare le richieste della sua sezione, es utente db non ha accesso alle request donazioni
+
 routes(app);
