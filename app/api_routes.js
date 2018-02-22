@@ -716,7 +716,7 @@ module.exports = function (app) {
             dbo.collection("donator").find().toArray(function (err, result) {
 
                 if (err) {
-                    res.send({'error': 'An error has occurred'});
+                    res.send({'error': 'Si è verificato un errore'});
                     db.close();
                 } else {
                     res.send(result);
@@ -766,7 +766,7 @@ module.exports = function (app) {
             dbo.collection("donator").insertOne(line,function (err) {
 
                 if (err) {
-                    res.send({'error': 'An error has occurred'});
+                    res.send({'error': 'Si è verificato un errore'});
                     logger("error", 'Donor insert request', 500, "POST", getClientIp(req));
                     db.close();
                 } else {
@@ -811,8 +811,8 @@ module.exports = function (app) {
             dbo.collection("donator").deleteOne(line,function (err) {
 
                 if (err) {
-                    res.send({'error': 'An error has occurred'});
-                    logger("error", 'Donor insert request', 500, "DELETE", getClientIp(req));
+                    res.send({'error': 'Si è verificato un errore'});
+                    logger("error", 'Donor delete request', 500, "DELETE", getClientIp(req));
                     db.close();
                 } else {
                     res.send({
@@ -820,6 +820,66 @@ module.exports = function (app) {
                         'removedData': line
                     });
                     logger("info", 'Donor delete request', 200, "DELETE", getClientIp(req));
+                    db.close();
+                }
+
+            });
+        });
+
+
+    });
+
+    /**
+     *   PUT Request on collection donor on MongoDB
+     *   Aggiorno un donatore dalla collection donor tramite l'_id mongo
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donations?id=5a8ecaebd9329c134b71f6a5&userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908&donationAmount=5
+     */
+
+    app.put('/donations', (req, res) => {
+
+        const url = db.url;
+
+        const id = req.param('id');
+        const userId = req.param('userId');
+        const donationDate = req.param('donationDate');
+        const expirationDate = req.param('expirationDate');
+        const userSteamId = req.param('userSteamId');
+        const adminNotes = req.param('adminNotes');
+        const donationAmount = req.param('donationAmount');
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("alirdb");
+
+            // Documento da aggiungere
+            const selector = {
+                _id: new mongo.ObjectID(id),
+            };
+
+            const updated = {
+                userId: userId,
+                donationDate: donationDate,
+                expirationDate: expirationDate,
+                userSteamId: userSteamId,
+                donationAmount: donationAmount,
+                adminNotes: adminNotes
+            };
+
+            dbo.collection("donator").update(selector, updated,function (err) {
+
+                if (err) {
+                    res.send({'error': 'Si è verificato un errore'});
+                    logger("error", 'Donor edit request', 500, "PUT", getClientIp(req));
+                    db.close();
+                } else {
+                    res.send({
+                        'info': 'Rimozione effettuata con successo',
+                        'updatedData': updated
+                    });
+                    logger("info", 'Donor edit request', 200, "PUT", getClientIp(req));
                     db.close();
                 }
 
