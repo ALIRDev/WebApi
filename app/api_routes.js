@@ -744,14 +744,23 @@ module.exports = function (app) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             const dbo = db.db("alirdb");
-            //const query = { userid: "3" };
-            dbo.collection("donator").find().toArray(function (err, result) {
+
+            // Documento da aggiungere
+            const line = {
+                userId: "Company Inc",
+                donationDate: "Highway 37",
+                expirationDate: "Highway 37",
+                userSteamId: "Highway 37",
+                adminNotes: "Highway 37"
+            };
+
+            dbo.collection("donator").insertOne(line,function (err) {
 
                 if (err) {
                     res.send({'error': 'An error has occurred'});
                     db.close();
                 } else {
-                    res.send(result);
+                    res.send({'info': 'Dati inseriti correttamente'});
                     db.close();
                 }
 
