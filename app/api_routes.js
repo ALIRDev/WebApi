@@ -1,5 +1,8 @@
+const MongoClient    = require('mongodb').MongoClient;
+const db             = require('./db');
 const fs = require("file-system");
 const jsonQuery = require('json-query');
+const bodyParser     =    require("body-parser");
 const winston = require('winston');
 const request = require('ajax-request');
 
@@ -43,6 +46,12 @@ module.exports = function (app) {
             from: from
         });
     }
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE ALIRDB
+     *   -------------------------------------------------
+     */
 
     /**
      *   GET System status
@@ -669,13 +678,87 @@ module.exports = function (app) {
                 eventType: 'live',
                 type: 'video'
             }
-        }, function(err, res, body) {
+        }, function (err, res, body) {
             console.log(body);
             // TODO: Per completare la richiesta è necessario essere https :(
         });
 
         res.send({"ok": "Sistema online"});
         logger("info", 'Status request', 200, "GET", getClientIp(req));
+    });
+
+    /**
+     *   -------------------------------------------------
+     *            RICHIESTE DONATIONS - MONGODB
+     *   -------------------------------------------------
+     */
+
+    app.use(bodyParser.json());
+
+    /**
+     *   GET Request on collection donator on MongoDB
+     *   Ottengo tutti i donatori nella collection donator
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donations --> [...]
+     */
+
+    app.get('/donations', (req, res) => {
+
+        const url = db.url;
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("alirdb");
+            //const query = { userid: "3" };
+            dbo.collection("donator").find().toArray(function (err, result) {
+
+                if (err) {
+                    res.send({'error': 'An error has occurred'});
+                    db.close();
+                } else {
+                    res.send(result);
+                    db.close();
+                }
+
+            });
+        });
+
+
+    });
+
+    /**
+     *   GET Request on collection donator on MongoDB
+     *   Ottengo tutti i donatori nella collection donator
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donations --> [...]
+     */
+
+    app.post('/donations', (req, res) => {
+
+        const url = db.url;
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("alirdb");
+            //const query = { userid: "3" };
+            dbo.collection("donator").find().toArray(function (err, result) {
+
+                if (err) {
+                    res.send({'error': 'An error has occurred'});
+                    db.close();
+                } else {
+                    res.send(result);
+                    db.close();
+                }
+
+            });
+        });
+
+
     });
 
 };
