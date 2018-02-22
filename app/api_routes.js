@@ -5,6 +5,7 @@ const jsonQuery = require('json-query');
 const bodyParser     =    require("body-parser");
 const winston = require('winston');
 const request = require('ajax-request');
+const mongo = require('mongodb-wrapper');
 
 // Path file-system
 const playersJson = "/alirdb/player.json";
@@ -729,8 +730,8 @@ module.exports = function (app) {
     });
 
     /**
-     *   POST Request on collection donator on MongoDB
-     *   Aggiungo un donatore nella collection active
+     *   POST Request on collection donor on MongoDB
+     *   Aggiungo un donatore nella collection donor
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
@@ -772,6 +773,51 @@ module.exports = function (app) {
                         'insertData': line
                     });
                     logger("info", 'Donor insert request', 200, "POST", getClientIp(req));
+                    db.close();
+                }
+
+            });
+        });
+
+
+    });
+
+    /**
+     *   DELETE Request on collection donor on MongoDB
+     *   Rimuovo un donatore dalla collection donor tramite l'_id mongo
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donations?id=5a8ecaebd9329c134b71f6a5
+     */
+
+    app.delete('/donations', (req, res) => {
+
+        const url = db.url;
+
+        const id = req.param('id');
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("alirdb");
+
+            // Documento da aggiungere
+            const line = {
+                _id: new mongo.ObjectID(id),
+            };
+
+            dbo.collection("donator").deleteOne(line,function (err) {
+
+                if (err) {
+                    res.send({'error': 'An error has occurred'});
+                    logger("error", 'Donor insert request', 500, "DELETE", getClientIp(req));
+                    db.close();
+                } else {
+                    res.send({
+                        'info': 'Rimozione effettuata con successo',
+                        'removedData': line
+                    });
+                    logger("info", 'Donor delete request', 200, "DELETE", getClientIp(req));
                     db.close();
                 }
 
