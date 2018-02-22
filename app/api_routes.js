@@ -734,12 +734,18 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations --> [...]
+     *   @example: http://192.168.30.77:8000/donations?userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908
      */
 
     app.post('/donations', (req, res) => {
 
         const url = db.url;
+
+        const userId = req.param('userId');
+        const donationDate = req.param('donationDate');
+        const expirationDate = req.param('expirationDate');
+        const userSteamId = req.param('userSteamId');
+        const adminNotes = req.param('adminNotes');
 
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
@@ -747,20 +753,25 @@ module.exports = function (app) {
 
             // Documento da aggiungere
             const line = {
-                userId: "Company Inc",
-                donationDate: "Highway 37",
-                expirationDate: "Highway 37",
-                userSteamId: "Highway 37",
-                adminNotes: "Highway 37"
+                userId: userId,
+                donationDate: donationDate,
+                expirationDate: expirationDate,
+                userSteamId: userSteamId,
+                adminNotes: adminNotes
             };
 
             dbo.collection("donator").insertOne(line,function (err) {
 
                 if (err) {
                     res.send({'error': 'An error has occurred'});
+                    logger("error", 'Donor insert request', 500, "POST", getClientIp(req));
                     db.close();
                 } else {
-                    res.send({'info': 'Dati inseriti correttamente'});
+                    res.send({
+                        'info': 'Dati inseriti correttamente',
+                        'insertData': line
+                    });
+                    logger("info", 'Donor insert request', 200, "POST", getClientIp(req));
                     db.close();
                 }
 
