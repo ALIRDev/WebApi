@@ -2,10 +2,11 @@ const express        = require('express');
 const ip             = require("ip");
 const app            = express();
 const routes         = require('./app/api_routes');
-const basicAuth      = require('express-basic-auth');
+const auth           = require('http-auth');
+const winston        = require('winston');
 
-const port = 8000;
-const HOST = ip.address();
+const port           = 8000;
+const HOST           = ip.address();
 
 app.listen(port, HOST);
 
@@ -13,20 +14,24 @@ console.log("   ----  ALIR WebApi  ----   ");
 
 console.log(`In esecuzione su http://${HOST}:${port}`);
 
-function getUnauthorizedResponse(req) {
-    return req.auth
-        ? ('Credenziali ' + req.auth.user + ' respinte')
-        : 'Nessuna credenziale fornita'
-}
+const basic = auth.basic({
+        realm: "Users",
+        file: "./htpasswd/user.htpasswd"
+    }
+);
 
-app.use(basicAuth({
-    users: {
-        // Utente di dev
-        'admin':'password',
-    },
-    unauthorizedResponse: getUnauthorizedResponse
-}));
+app.use(auth.connect(basic));
 
-// TODO: In base all'utente loggato disabilitare ed abilitare le richieste della sua sezione, es utente db non ha accesso alle request donazioni
+basic.on('success', (result, req) => {
+    winston.info("User " + result.user + " authenticated");
+});
+
+basic.on('fail', (result, req) => {
+    winston.warn("User " + result.user + " authentication failed");
+});
+
+basic.on('error', (error, req) => {
+    winston.error("Authentication error: " + error.code + " - " + error.message);
+});
 
 routes(app);
