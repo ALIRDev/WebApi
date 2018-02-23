@@ -8,14 +8,20 @@
     "dev": "nodemon server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.14.11"
+    "nodemon": "^1.15.1"
   },
   "dependencies": {
+    "ajax-request": "^1.2.3",
+    "body-parser": "latest",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "file-system": "^2.2.2",
+    "http-auth": "^3.2.3",
     "https": "^1.0.0",
     "ip": "^1.1.5",
     "json-query": "^2.2.2",
+    "mongodb": "^3.0.2",
+    "mongodb-wrapper": "^1.0.3",
     "winston": "^2.4.0"
   },
   "license": "MIT"
