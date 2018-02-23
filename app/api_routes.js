@@ -1,19 +1,19 @@
 const MongoClient    = require('mongodb').MongoClient;
 const db             = require('./db');
-const fs = require("file-system");
-const jsonQuery = require('json-query');
+const fs             = require("file-system");
+const jsonQuery      = require('json-query');
 const bodyParser     =    require("body-parser");
-const winston = require('winston');
-const request = require('ajax-request');
-const mongo = require('mongodb-wrapper');
+const winston        = require('winston');
+const request        = require('ajax-request');
+const mongo          = require('mongodb-wrapper');
 
 // Path file-system
-const playersJson = "/alirdb/player.json";
-const gangsJson = "/alirdb/gangs.json";
-const vehiclesJson = "/alirdb/vehicles.json";
-const wantedJson = "/alirdb/wanted.json";
-const usersJson = "/alirdb/users.json";
-const fileEncrypt = "utf8";
+const playersJson    = "/alirdb/player.json";
+const gangsJson      = "/alirdb/gangs.json";
+const vehiclesJson   = "/alirdb/vehicles.json";
+const wantedJson     = "/alirdb/wanted.json";
+const usersJson      = "/alirdb/users.json";
+const fileEncrypt    = "utf8";
 
 // TODO: HTTPS Request
 // TODO: Request counter
@@ -40,11 +40,12 @@ module.exports = function (app) {
         return ipAddress;
     }
 
-    function logger(level, text, responseCode, type, from) {
+    function logger(level, text, responseCode, type, from, loggedUsers) {
         winston.log(level, text + " - ", {
             responseCode: responseCode,
             type: type,
-            from: from
+            from: from,
+            authUser: loggedUsers
         });
     }
 
@@ -64,7 +65,7 @@ module.exports = function (app) {
 
     app.get('/status', (req, res, next) => {
         res.send({"ok": "Sistema online"});
-        logger("info", 'Status request', 200, "GET", getClientIp(req));
+        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
     });
 
     /**
@@ -80,7 +81,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players lenght request', 500, "GET", getClientIp(req))
+                logger("error", 'Players lenght request', 500, "GET", getClientIp(req), req.user)
 
             } else {
                 // Parse del JSON locale
@@ -92,7 +93,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Players lenght request', 200, "GET", getClientIp(req))
+                logger("info", 'Players lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -114,7 +115,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players request by playerid', 500, "GET", getClientIp(req))
+                logger("error", 'Players request by playerid', 500, "GET", getClientIp(req), req.user)
 
             } else {
                 // Parse del JSON locale
@@ -128,11 +129,11 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Players request by playerid', 200, "GET", getClientIp(req))
+                    logger("info", 'Players request by playerid', 200, "GET", getClientIp(req), req.user)
 
                 } else {
                     res.send({404: "Nessun giocatore trovato"});
-                    logger("info", 'Players request by playerid', 404, "GET", getClientIp(req))
+                    logger("info", 'Players request by playerid', 404, "GET", getClientIp(req), req.user)
 
                 }
             }
@@ -155,7 +156,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players request by name', 500, "GET", getClientIp(req))
+                logger("error", 'Players request by name', 500, "GET", getClientIp(req), req.user)
 
             } else {
                 // Parse del JSON locale
@@ -166,11 +167,11 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Players request by name', 200, "GET", getClientIp(req))
+                    logger("info", 'Players request by name', 200, "GET", getClientIp(req), req.user)
 
                 } else {
                     res.send({404: "Nessun giocatore trovato"});
-                    logger("info", 'Players request by name', 404, "GET", getClientIp(req))
+                    logger("info", 'Players request by name', 404, "GET", getClientIp(req), req.user)
 
                 }
             }
@@ -192,7 +193,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players list request', 500, "GET", getClientIp(req))
+                logger("error", 'Players list request', 500, "GET", getClientIp(req), req.user)
 
             } else {
 
@@ -205,7 +206,7 @@ module.exports = function (app) {
                 let sliced = result.slice(0, size);
 
                 res.send(sliced);
-                logger("info", 'Players list request', 200, "GET", getClientIp(req))
+                logger("info", 'Players list request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -224,7 +225,7 @@ module.exports = function (app) {
         fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Vehicles lenght request', 500, "GET", getClientIp(req))
+                logger("error", 'Vehicles lenght request', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -235,7 +236,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Vehicles lenght request', 200, "GET", getClientIp(req))
+                logger("info", 'Vehicles lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -257,7 +258,7 @@ module.exports = function (app) {
         fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req))
+                logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -267,15 +268,15 @@ module.exports = function (app) {
 
                 if (err) {
                     res.send({"500": "Errore"});
-                    logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req))
+                    logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req), req.user)
                 }
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Vehicles request by pid', 200, "GET", getClientIp(req))
+                    logger("info", 'Vehicles request by pid', 200, "GET", getClientIp(req), req.user)
                 } else {
                     res.send({404: "Nessun veicolo trovato"});
-                    logger("info", 'Vehicles request by pid', 404, "GET", getClientIp(req))
+                    logger("info", 'Vehicles request by pid', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -294,7 +295,7 @@ module.exports = function (app) {
         fs.readFile(wantedJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Wanted lenght request', 500, "GET", getClientIp(req))
+                logger("error", 'Wanted lenght request', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -305,7 +306,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Wanted lenght request', 200, "GET", getClientIp(req))
+                logger("info", 'Wanted lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -327,7 +328,7 @@ module.exports = function (app) {
         fs.readFile(wantedJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Wanted request by wantedId', 500, "GET", getClientIp(req))
+                logger("error", 'Wanted request by wantedId', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -340,10 +341,10 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Wanted request by wantedId', 200, "GET", getClientIp(req))
+                    logger("info", 'Wanted request by wantedId', 200, "GET", getClientIp(req), req.user)
                 } else {
                     res.send({404: "Nessun ricercato trovato"});
-                    logger("info", 'Wanted request by wantedId', 404, "GET", getClientIp(req))
+                    logger("info", 'Wanted request by wantedId', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -362,7 +363,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs lenght request', 500, "GET", getClientIp(req))
+                logger("error", 'Gangs lenght request', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -373,7 +374,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Gangs lenght request', 200, "GET", getClientIp(req))
+                logger("info", 'Gangs lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -392,7 +393,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs list request', 500, "GET", getClientIp(req))
+                logger("error", 'Gangs list request', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -409,7 +410,7 @@ module.exports = function (app) {
                 }
 
                 res.send(array);
-                logger("info", 'Gangs list request', 200, "GET", getClientIp(req))
+                logger("info", 'Gangs list request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -432,7 +433,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs request by name', 500, "GET", getClientIp(req))
+                logger("error", 'Gangs request by name', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -442,11 +443,11 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Gangs request by name', 200, "GET", getClientIp(req))
+                    logger("info", 'Gangs request by name', 200, "GET", getClientIp(req), req.user)
                 } else {
 
                     res.send({404: "not found"});
-                    logger("info", 'Gangs request by name', 404, "GET", getClientIp(req))
+                    logger("info", 'Gangs request by name', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -469,7 +470,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs request filter members', 500, "GET", getClientIp(req))
+                logger("error", 'Gangs request filter members', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -488,7 +489,7 @@ module.exports = function (app) {
 
                         if (subres.members[y] === playerid) {
                             finalName = subres;
-                            logger("info", 'Gangs request filter members', 200, "GET", getClientIp(req));
+                            logger("info", 'Gangs request filter members', 200, "GET", getClientIp(req), req.user);
                             // impedisco ulteriori risultati
                             break;
                         }
@@ -518,7 +519,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request lenght', 500, "GET", getClientIp(req))
+                logger("error", 'Users request lenght', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -529,7 +530,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Users request lenght', 200, "GET", getClientIp(req))
+                logger("info", 'Users request lenght', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -551,7 +552,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request by id', 500, "GET", getClientIp(req))
+                logger("error", 'Users request by id', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -561,10 +562,10 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Users request by id', 200, "GET", getClientIp(req))
+                    logger("info", 'Users request by id', 200, "GET", getClientIp(req), req.user)
                 } else {
                     res.send({404: "Nessun utente trovato"});
-                    logger("info", 'Users request by id', 404, "GET", getClientIp(req))
+                    logger("info", 'Users request by id', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -582,7 +583,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'List request for cop', 500, "GET", getClientIp(req))
+                logger("error", 'List request for cop', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -592,7 +593,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'List request for cop', 200, "GET", getClientIp(req))
+                logger("info", 'List request for cop', 200, "GET", getClientIp(req), req.user)
             }
         });
     });
@@ -609,7 +610,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'List request for med', 500, "GET", getClientIp(req))
+                logger("error", 'List request for med', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -619,7 +620,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'List request for med', 200, "GET", getClientIp(req))
+                logger("info", 'List request for med', 200, "GET", getClientIp(req), req.user)
             }
         });
     });
@@ -640,7 +641,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request by steamid', 500, "GET", getClientIp(req))
+                logger("error", 'Users request by steamid', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -650,10 +651,10 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Users request by steamid', 200, "GET", getClientIp(req))
+                    logger("info", 'Users request by steamid', 200, "GET", getClientIp(req), req.user)
                 } else {
                     res.send({404: "Nessun utente trovato"});
-                    logger("info", 'Users request by steamid', 404, "GET", getClientIp(req))
+                    logger("info", 'Users request by steamid', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -685,7 +686,7 @@ module.exports = function (app) {
         });
 
         res.send({"ok": "Sistema online"});
-        logger("info", 'Status request', 200, "GET", getClientIp(req));
+        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
     });
 
     /**
@@ -767,14 +768,14 @@ module.exports = function (app) {
 
                 if (err) {
                     res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor insert request', 500, "POST", getClientIp(req));
+                    logger("error", 'Donor insert request', 500, "POST", getClientIp(req), req.user);
                     db.close();
                 } else {
                     res.send({
                         'info': 'Dati inseriti correttamente',
                         'insertData': line
                     });
-                    logger("info", 'Donor insert request', 200, "POST", getClientIp(req));
+                    logger("info", 'Donor insert request', 200, "POST", getClientIp(req), req.user);
                     db.close();
                 }
 
@@ -812,14 +813,14 @@ module.exports = function (app) {
 
                 if (err) {
                     res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor delete request', 500, "DELETE", getClientIp(req));
+                    logger("error", 'Donor delete request', 500, "DELETE", getClientIp(req), req.user);
                     db.close();
                 } else {
                     res.send({
                         'info': 'Rimozione effettuata con successo',
                         'removedData': line
                     });
-                    logger("info", 'Donor delete request', 200, "DELETE", getClientIp(req));
+                    logger("info", 'Donor delete request', 200, "DELETE", getClientIp(req), req.user);
                     db.close();
                 }
 
@@ -872,14 +873,14 @@ module.exports = function (app) {
 
                 if (err) {
                     res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor edit request', 500, "PUT", getClientIp(req));
+                    logger("error", 'Donor edit request', 500, "PUT", getClientIp(req), req.user);
                     db.close();
                 } else {
                     res.send({
                         'info': 'Rimozione effettuata con successo',
                         'updatedData': updated
                     });
-                    logger("info", 'Donor edit request', 200, "PUT", getClientIp(req));
+                    logger("info", 'Donor edit request', 200, "PUT", getClientIp(req), req.user);
                     db.close();
                 }
 
