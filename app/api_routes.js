@@ -759,11 +759,11 @@ module.exports = function (app) {
 
             // Documento da aggiungere
             const line = {
-                userId: userId,
-                donationDate: donationDate,
-                expirationDate: expirationDate,
-                userSteamId: userSteamId,
-                donationAmount: donationAmount,
+                userId: parseInt(userId),
+                donationDate: new Date(donationDate),
+                expirationDate: new Date(expirationDate),
+                userSteamId: parseInt(userSteamId),
+                donationAmount: parseInt(donationAmount),
                 adminNotes: adminNotes
             };
 
@@ -864,11 +864,11 @@ module.exports = function (app) {
             };
 
             const updated = {
-                userId: userId,
-                donationDate: donationDate,
-                expirationDate: expirationDate,
-                userSteamId: userSteamId,
-                donationAmount: donationAmount,
+                userId: parseInt(userId),
+                donationDate: new Date(donationDate),
+                expirationDate: new Date(expirationDate),
+                userSteamId: parseInt(userSteamId),
+                donationAmount: parseInt(donationAmount),
                 adminNotes: adminNotes
             };
 
