@@ -1,0 +1,36 @@
+version: "2"
+services:
+  app:
+    container_name: alirwebapi-app
+    image: andreacw/alir-web-api:latest
+    restart: always
+    build: .
+    ports:
+      - "8000:8000"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    networks:
+      mongo-net:
+        ipv4_address: 172.29.4.5
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    environment:
+      - MONGO_DATA_DIR=/data/db
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "27017"
+    command: mongod --smallfiles
+    networks:
+      mongo-net:
+        ipv4_address: 172.29.4.4
+
+networks:
+  mongo-net:
+    ipam:
+      config:
+        - subnet: 172.29.4.0/24
+          ip_range: 172.29.4.0/24
