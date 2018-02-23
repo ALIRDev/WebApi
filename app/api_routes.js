@@ -721,6 +721,44 @@ module.exports = function (app) {
                     db.close();
                 } else {
                     res.send(result);
+                    logger("info", 'Donators all request', 200, "GET", getClientIp(req), req.user);
+                    db.close();
+                }
+
+            });
+        });
+
+
+    });
+
+    /**
+     *   GET Request on collection donator on MongoDB by id
+     *   Ottengo tutti i donatori nella collection donator
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donations/id?userId=7 --> [...]
+     */
+
+
+    app.get('/donations/id', (req, res) => {
+
+        const url = db.url;
+
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            const dbo = db.db("alirdb");
+            let idVal = req.param('userId');
+            let search = { userId: idVal };
+
+            dbo.collection("donator").find(search).toArray(function (err, result) {
+
+                if (err) {
+                    res.send({'error': 'Si è verificato un errore'});
+                    db.close();
+                } else {
+                    res.send(result);
+                    logger("info", 'Donators by userId request', 200, "GET", getClientIp(req), req.user);
                     db.close();
                 }
 

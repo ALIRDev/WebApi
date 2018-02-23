@@ -94,6 +94,13 @@ Richiedo la collection donor del db mongo (database alirdb) per la visualizzazio
 ```
 http://192.168.30.77:8000/donations
 ```
+#### GET donator by id
+
+Richiedo il donatore tramite il suo userId univoco (InvisioPower)
+
+```
+http://192.168.30.77:8000/donations/id?userId=7 --> [...]
+```
 
 #### PUT donator by id
 
