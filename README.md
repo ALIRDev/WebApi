@@ -132,7 +132,7 @@ Per tutte le richieste a partire dalla versione Web Api 2
 
 ```javascript
 
-function make_base_auth(user, password) {
+function make_base_auth(user, pass) {
   let tok = user + ':' + pass;
   let hash = Base64.encode(tok);
   return "Basic " + hash;
