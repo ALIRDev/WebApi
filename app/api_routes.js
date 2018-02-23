@@ -860,7 +860,7 @@ module.exports = function (app) {
 
             // Documento da aggiungere
             const selector = {
-                _id: new mongo.ObjectID(id),
+                _id:  mongo.ObjectID(id),
             };
 
             const updated = {
@@ -880,7 +880,7 @@ module.exports = function (app) {
                     db.close();
                 } else {
                     res.send({
-                        'info': 'Rimozione effettuata con successo',
+                        'info': 'Aggiornamento effettuato con successo!',
                         'updatedData': updated
                     });
                     logger("info", 'Donor edit request', 200, "PUT", getClientIp(req), req.user);
