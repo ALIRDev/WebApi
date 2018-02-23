@@ -661,35 +661,6 @@ module.exports = function (app) {
     });
 
     /**
-     *   GET System status
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/jhonny/live/embed --> [{"ok":"Sistema online"}]
-     */
-
-    app.get('/jhonny/live/embed', (req, res, next) => {
-
-        request({
-            url: 'https://www.googleapis.com/youtube/v3/search',
-            method: 'GET',
-            data: {
-                part: 'snippet',
-                channelId: 'UCHfZlJ0hl47QH8DGmnIRjoA',
-                key: 'AIzaSyA3C-U46hytCRtFgU_nld_Zh_yF2jd5jnE',
-                eventType: 'live',
-                type: 'video'
-            }
-        }, function (err, res, body) {
-            console.log(body);
-            // TODO: Per completare la richiesta è necessario essere https :(
-        });
-
-        res.send({"ok": "Sistema online"});
-        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
-    });
-
-    /**
      *   -------------------------------------------------
      *            RICHIESTE DONATIONS - MONGODB
      *   -------------------------------------------------
@@ -735,7 +706,7 @@ module.exports = function (app) {
      *   GET Request on collection donator on MongoDB by id
      *   Ottengo tutti i donatori nella collection donator
      *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
+     *   @param: res = Risposta alla richiestal
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8000/donations/id?userId=7 --> [...]
      */
@@ -926,6 +897,43 @@ module.exports = function (app) {
         });
 
 
+    });
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE YOUTUBE
+     *   -------------------------------------------------
+     */
+
+    /**
+     *   GET Live status test
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/jhonny/live/embed --> [{"ok":"Sistema online"}]
+     *
+     *                     ---   NOT USED   ---
+     */
+
+    app.get('/jhonny/live/embed', (req, res, next) => {
+
+        request({
+            url: 'https://www.googleapis.com/youtube/v3/search',
+            method: 'GET',
+            data: {
+                part: 'snippet',
+                channelId: 'UCHfZlJ0hl47QH8DGmnIRjoA',
+                key: 'AIzaSyA3C-U46hytCRtFgU_nld_Zh_yF2jd5jnE',
+                eventType: 'live',
+                type: 'video'
+            }
+        }, function (err, res, body) {
+            console.log(body);
+            // TODO: Per completare la richiesta è necessario essere https :(
+        });
+
+        res.send({"ok": "Sistema online"});
+        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
     });
 
 };
