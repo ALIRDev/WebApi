@@ -652,7 +652,7 @@ module.exports = function (app) {
                 }
             }
         });
-    })
+    });
 
     /**
      *   -------------------------------------------------
@@ -697,12 +697,12 @@ module.exports = function (app) {
     });
 
     /**
-     *   GET Request on collection donator on MongoDB by id
-     *   Ottengo tutti i donatori nella collection donator
+     *   GET Request on collection donator on MongoDB by steamId
+     *   Ottengo tutti i donatori nella collection donator con lo steamId passato
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiestal
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations/id?userId=7 --> [...]
+     *   @example: http://192.168.30.77:8000/donations/id?steamId=76561197960737520 --> [...]
      */
 
 
@@ -713,8 +713,8 @@ module.exports = function (app) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             const dbo = db.db("alirdb");
-            let idVal = req.param('userId');
-            let search = { userId: idVal };
+            let idVal = parseInt(req.param('steamId'));
+            let search = { userSteamId: idVal };
 
             dbo.collection("donator").find(search).toArray(function (err, result) {
 
@@ -722,8 +722,9 @@ module.exports = function (app) {
                     res.send({'error': 'Si è verificato un errore'});
                     db.close();
                 } else {
+                    console.log(req.param('steamId'));
                     res.send(result);
-                    logger("info", 'Donators by userId request', 200, "GET", getClientIp(req), req.user);
+                    logger("info", 'Donators by userSteamId request', 200, "GET", getClientIp(req), req.user);
                     db.close();
                 }
 
@@ -755,7 +756,7 @@ module.exports = function (app) {
 
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            const dbo = db.db("alirdb");
+            let dbo = db.db("alirdb");
 
             // Documento da aggiungere
             const line = {
