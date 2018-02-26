@@ -4,7 +4,6 @@ const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 const bodyParser     = require("body-parser");
 const winston        = require('winston');
-const request        = require('ajax-request');
 const mongo          = require('mongodb-wrapper');
 
 // Path file-system
@@ -890,6 +889,20 @@ module.exports = function (app) {
             });
         });
 
+
+    });
+
+    /**
+     *   GET Checksec, convalido il login lato utente sulla pagina con il remoto
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/checksec --> [{200: "Accesso riuscito"}]
+     */
+
+    app.get('/checksec', (req, res) => {
+
+        res.send({200: "Accesso riuscito"});
 
     });
 

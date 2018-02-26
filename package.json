@@ -11,7 +11,6 @@
     "nodemon": "^1.15.1"
   },
   "dependencies": {
-    "ajax-request": "^1.2.3",
     "body-parser": "latest",
     "cors": "^2.8.4",
     "express": "^4.16.2",
