@@ -722,7 +722,6 @@ module.exports = function (app) {
                     res.send({'error': 'Si è verificato un errore'});
                     db.close();
                 } else {
-                    console.log(req.param('steamId'));
                     res.send(result);
                     logger("info", 'Donators by userSteamId request', 200, "GET", getClientIp(req), req.user);
                     db.close();
