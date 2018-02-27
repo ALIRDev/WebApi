@@ -1001,5 +1001,21 @@ module.exports = function (app) {
         });
     });
 
+    /**
+     *   GET Arma 3 info
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
+     */
+
+    app.get('/steam/arma/news', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=107410&count=10&maxlength=300&format=json';
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
 };
 
