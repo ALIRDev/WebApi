@@ -961,10 +961,24 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
      */
 
-
     app.get('/steam/game/:appid/achievements', function(req, res, next) {
-        // Calculate the Steam API URL we want to use
         let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
+    /**
+     *   GET user steam data
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     */
+
+    app.get('/steam/users/:steamid/data', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+ steamK +'&steamids=' + req.params.steamid;
         request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(steamHttpBody);
