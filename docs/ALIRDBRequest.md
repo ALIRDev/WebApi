@@ -76,3 +76,11 @@ Richiedo l'elenco cop al server.
 ```
 http://192.168.30.77:8000/lists/cop
 ```
+
+###### GET Server data
+
+Richiedo li dati di up time al server di arma.
+
+```
+http://192.168.30.77:8000/server/data
+```

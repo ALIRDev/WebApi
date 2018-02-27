@@ -1017,5 +1017,24 @@ module.exports = function (app) {
         });
     });
 
+    /**
+     *   GET Arma 3 info
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
+     */
+
+    const keyARm = "bcdzrsb2sy4nfdpb3w9g2fk7f5kqre04c2k";
+
+    app.get('/server/data', function(req, res, next) {
+        let url = 'https://arma3-servers.net/api/?object=servers&element=detail&key=' + keyARm;
+        request.get(url, function(error, httpResponse, httpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(httpBody);
+        });
+    });
+
+
 };
 
