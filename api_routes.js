@@ -5,6 +5,8 @@ const jsonQuery      = require('json-query');
 const bodyParser     = require("body-parser");
 const winston        = require('winston');
 const mongo          = require('mongodb-wrapper');
+const request        = require('request');
+const req            = require('express');
 
 // Path file-system
 const playersJson    = "/alirdb/player.json";
@@ -871,7 +873,7 @@ module.exports = function (app) {
                 adminNotes: adminNotes
             };
 
-            dbo.collection("donator").update(selector, updated,function (err) {
+            dbo.collection("donator").update(selector, updated, function (err) {
 
                 if (err) {
                     res.send({'error': 'Si è verificato un errore'});
@@ -941,6 +943,32 @@ module.exports = function (app) {
 
         res.send({"ok": "Sistema online"});
         logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
+    });
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE STEAM
+     *   -------------------------------------------------
+     */
+
+    const steamK = "7FC5C2ACE4CA1A33929ABAD8F5843B59";
+
+    /**
+     *   GET games achievements (Ottengo l'elenco dei trofei per un determinato gioco)
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
+     */
+
+
+    app.get('/steam/game/:appid/achievements', function(req, res, next) {
+        // Calculate the Steam API URL we want to use
+        let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
     });
 
 };
