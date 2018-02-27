@@ -4,8 +4,9 @@ const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 const bodyParser     = require("body-parser");
 const winston        = require('winston');
-const request        = require('ajax-request');
 const mongo          = require('mongodb-wrapper');
+const request        = require('request');
+const req            = require('express');
 
 // Path file-system
 const playersJson    = "/alirdb/player.json";
@@ -652,7 +653,7 @@ module.exports = function (app) {
                 }
             }
         });
-    })
+    });
 
     /**
      *   -------------------------------------------------
@@ -697,12 +698,12 @@ module.exports = function (app) {
     });
 
     /**
-     *   GET Request on collection donator on MongoDB by id
-     *   Ottengo tutti i donatori nella collection donator
+     *   GET Request on collection donator on MongoDB by steamId
+     *   Ottengo tutti i donatori nella collection donator con lo steamId passato
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiestal
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations/id?userId=7 --> [...]
+     *   @example: http://192.168.30.77:8000/donations/id?steamId=76561197960737520 --> [...]
      */
 
 
@@ -713,8 +714,8 @@ module.exports = function (app) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             const dbo = db.db("alirdb");
-            let idVal = req.param('userId');
-            let search = { userId: idVal };
+            let idVal = parseInt(req.param('steamId'));
+            let search = { userSteamId: idVal };
 
             dbo.collection("donator").find(search).toArray(function (err, result) {
 
@@ -723,7 +724,7 @@ module.exports = function (app) {
                     db.close();
                 } else {
                     res.send(result);
-                    logger("info", 'Donators by userId request', 200, "GET", getClientIp(req), req.user);
+                    logger("info", 'Donators by userSteamId request', 200, "GET", getClientIp(req), req.user);
                     db.close();
                 }
 
@@ -755,7 +756,7 @@ module.exports = function (app) {
 
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            const dbo = db.db("alirdb");
+            let dbo = db.db("alirdb");
 
             // Documento da aggiungere
             const line = {
@@ -872,7 +873,7 @@ module.exports = function (app) {
                 adminNotes: adminNotes
             };
 
-            dbo.collection("donator").update(selector, updated,function (err) {
+            dbo.collection("donator").update(selector, updated, function (err) {
 
                 if (err) {
                     res.send({'error': 'Si è verificato un errore'});
@@ -890,6 +891,20 @@ module.exports = function (app) {
             });
         });
 
+
+    });
+
+    /**
+     *   GET Checksec, convalido il login lato utente sulla pagina con il remoto
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/checksec --> [{200: "Accesso riuscito"}]
+     */
+
+    app.get('/checksec', (req, res) => {
+
+        res.send({200: "Accesso riuscito"});
 
     });
 
@@ -929,6 +944,97 @@ module.exports = function (app) {
         res.send({"ok": "Sistema online"});
         logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
     });
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE STEAM
+     *   -------------------------------------------------
+     */
+
+    const steamK = "7FC5C2ACE4CA1A33929ABAD8F5843B59";
+
+    /**
+     *   GET games achievements (Ottengo l'elenco dei trofei per un determinato gioco)
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
+     */
+
+    app.get('/steam/game/:appid/achievements', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
+    /**
+     *   GET user steam data
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     */
+
+    app.get('/steam/users/:steamid/data', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+ steamK +'&steamids=' + req.params.steamid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
+    /**
+     *   GET user steam data
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     */
+
+    app.get('/steam/users/:steamid/ban', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key='+ steamK +'&steamids=' + req.params.steamid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
+    /**
+     *   GET Arma 3 info
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
+     */
+
+    app.get('/steam/arma/news', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=107410&count=10&maxlength=300&format=json';
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
+    /**
+     *   GET Arma 3 info
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
+     */
+
+    const keyARm = "bcdzrsb2sy4nfdpb3w9g2fk7f5kqre04c2k";
+
+    app.get('/server/data', function(req, res, next) {
+        let url = 'https://arma3-servers.net/api/?object=servers&element=detail&key=' + keyARm;
+        request.get(url, function(error, httpResponse, httpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(httpBody);
+        });
+    });
+
 
 };
 
