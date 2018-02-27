@@ -985,5 +985,21 @@ module.exports = function (app) {
         });
     });
 
+    /**
+     *   GET user steam data
+     *   @param: req = Url della richiesta
+     *   @param: res = Risposta alla richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     */
+
+    app.get('/steam/users/:steamid/ban', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key='+ steamK +'&steamids=' + req.params.steamid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(steamHttpBody);
+        });
+    });
+
 };
 
