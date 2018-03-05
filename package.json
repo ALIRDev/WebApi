@@ -21,8 +21,8 @@
     "json-query": "^2.2.2",
     "mongodb": "^3.0.3",
     "mongodb-wrapper": "^1.0.3",
-    "winston": "^2.4.0",
-    "request": "latest"
+    "request": "latest",
+    "winston": "^2.4.0"
   },
   "license": "MIT"
 }

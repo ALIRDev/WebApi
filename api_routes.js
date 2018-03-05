@@ -465,7 +465,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs request filter members', 500, "GET", getClientIp(req), req.user)
+                logger("error", 'Gangs request by id', 500, "GET", getClientIp(req), req.user)
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -484,7 +484,7 @@ module.exports = function (app) {
 
                         if (subres.members[y] === playerid) {
                             finalName = subres;
-                            logger("info", 'Gangs request filter members', 200, "GET", getClientIp(req), req.user);
+                            logger("info", 'Gangs request by id', 200, "GET", getClientIp(req), req.user);
                             // impedisco ulteriori risultati
                             break;
                         }
