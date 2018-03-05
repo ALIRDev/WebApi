@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.15.1"
+    "nodemon": "^1.17.1"
   },
   "dependencies": {
     "body-parser": "latest",
