@@ -5,6 +5,8 @@ services:
     image: andreacw/alir-web-api:latest
     restart: always
     build: .
+    volumes:
+      - ./alirdb:/alirdb
     ports:
       - "8000:8000"
     links:

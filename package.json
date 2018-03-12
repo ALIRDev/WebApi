@@ -18,7 +18,8 @@
     "https": "^1.0.0",
     "ip": "^1.1.5",
     "json-query": "^2.2.2",
-    "winston": "^2.4.1"
+    "winston": "^2.4.1",
+    "request": "latest"
   },
   "license": "MIT"
 }
