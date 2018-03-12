@@ -709,6 +709,36 @@ module.exports = function (app) {
         });
     });
 
+    /**
+     *   GET Donor stats
+     *   @param: req = Url della richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/donor/stats --> [{"onelev": int,"twolev": int}]
+     */
+
+    app.get('/donor/stats', (req, res, next) => {
+
+        fs.readFile(playersJson, fileEncrypt, function (err, data) {
+            if (err) {
+                res.send({500: 'Errore durante la richiesta'});
+                logger("error", 'Stats request for donations', 500, "GET", getClientIp(req), req.user)
+            } else {
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+
+                let leve1 = jsonQuery('rows[**][*donorlevel=1]', {data: obj, allowRegexp: false}).value;
+                let leve2 = jsonQuery('rows[**][*donorlevel>=2]', {data: obj, allowRegexp: false}).value;
+
+                let onelenght = leve1.length;
+                let twolenght = leve2.length;
+
+                res.send({"onelev": onelenght,"twolev": twolenght});
+                logger("info", 'Stats request for donations', 200, "GET", getClientIp(req), req.user)
+            }
+        });
+    });
+
+    /**
      *   -------------------------------------------------
      *            RICHIESTE DONATIONS - MONGODB
      *   -------------------------------------------------
