@@ -682,6 +682,33 @@ module.exports = function (app) {
         });
     });
 
+    /**
+     *   GET List by donor !=2
+     *   @param: req = Url della richiesta
+     *   @return: Array di oggetti
+     *   @example: http://192.168.30.77:8000/lists/donor/2 --> [{....}]
+     */
+
+    app.get('/lists/donor/2', (req, res, next) => {
+
+        fs.readFile(playersJson, fileEncrypt, function (err, data) {
+            if (err) {
+                res.send({500: 'Errore durante la richiesta'});
+                logger("error", 'Whitelist request for donor level 2', 500, "GET", getClientIp(req), req.user)
+            } else {
+                // Parse del JSON locale
+                let obj = JSON.parse(data);
+                let level = "5";
+                // Regex di ricerca per nome
+                let result = jsonQuery('rows[**][*donorlevel>=2]', {data: obj, allowRegexp: false}).value;
+                // Lancio il risultato
+
+                res.send(result);
+                logger("info", 'Whitelist request for donor level 2', 200, "GET", getClientIp(req), req.user)
+            }
+        });
+    });
+
      *   -------------------------------------------------
      *            RICHIESTE DONATIONS - MONGODB
      *   -------------------------------------------------
