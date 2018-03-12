@@ -79,8 +79,32 @@ http://192.168.30.77:8000/lists/cop
 
 ###### GET Server data
 
-Richiedo li dati di up time al server di arma.
+Richiedo i dati di up time al server di arma.
 
 ```
 http://192.168.30.77:8000/server/data
+```
+
+###### GET Donation list lv 1
+
+Richiedo la lista donatori liv 1.
+
+```
+http://192.168.30.77:8000/lists/donor/1
+```
+
+###### GET Donation list lv 2
+
+Richiedo la lista donatori liv 2.
+
+```
+http://192.168.30.77:8000/lists/donor/2
+```
+
+###### GET Donation stat
+
+Richiedo le statistiche sui donatori.
+
+```
+http://192.168.30.77:8000/donor/stat
 ```
