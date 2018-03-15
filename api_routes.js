@@ -577,6 +577,7 @@ module.exports = function (app) {
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
+                let level = "5";
                 // Regex di ricerca per nome
                 let result = jsonQuery('rows[**][*coplevel!=0]', {data: obj, allowRegexp: false}).value;
                 // Lancio il risultato
@@ -603,6 +604,7 @@ module.exports = function (app) {
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
+                let level = "5";
                 // Regex di ricerca per nome
                 let result = jsonQuery('rows[**][*mediclevel!=0]', {data: obj, allowRegexp: false}).value;
                 // Lancio il risultato
@@ -664,17 +666,13 @@ module.exports = function (app) {
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
+                let level = "5";
                 // Regex di ricerca per nome
                 let result = jsonQuery('rows[**][*donorlevel=1]', {data: obj, allowRegexp: false}).value;
-
                 // Lancio il risultato
-                if (result.length === 0) {
-                    res.send([]);
-                    logger("info", 'Whitelist request for donor level 1 return nothings', 200, "GET", getClientIp(req), req.user)
-                } else {
-                    res.send(result);
-                    logger("info", 'Whitelist request for donor level 1', 200, "GET", getClientIp(req), req.user)
-                }
+
+                res.send(result);
+                logger("info", 'Whitelist request for donor level 1', 200, "GET", getClientIp(req), req.user)
             }
         });
     });
@@ -695,17 +693,13 @@ module.exports = function (app) {
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
+                let level = "5";
                 // Regex di ricerca per nome
                 let result = jsonQuery('rows[**][*donorlevel>=2]', {data: obj, allowRegexp: false}).value;
-
                 // Lancio il risultato
-                if (result.length === 0) {
-                    res.send([]);
-                    logger("info", 'Whitelist request for donor level 2 return nothings', 200, "GET", getClientIp(req), req.user)
-                } else {
-                    res.send(result);
-                    logger("info", 'Whitelist request for donor level 2', 200, "GET", getClientIp(req), req.user)
-                }
+
+                res.send(result);
+                logger("info", 'Whitelist request for donor level 2', 200, "GET", getClientIp(req), req.user)
             }
         });
     });
@@ -733,263 +727,10 @@ module.exports = function (app) {
                 let onelenght = leve1.length;
                 let twolenght = leve2.length;
 
-                res.send({"onelev": onelenght, "twolev": twolenght});
+                res.send({"onelev": onelenght,"twolev": twolenght});
                 logger("info", 'Stats request for donations', 200, "GET", getClientIp(req), req.user)
             }
         });
-    });
-
-    /**
-     *   -------------------------------------------------
-     *            RICHIESTE DONATIONS - MONGODB
-     *   -------------------------------------------------
-     */
-
-    app.use(bodyParser.json());
-
-    /**
-     *   GET Request on collection donator on MongoDB
-     *   Ottengo tutti i donatori nella collection donator
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations --> [...]
-     */
-
-    app.get('/donations', (req, res) => {
-
-        const url = db.url;
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            const dbo = db.db("alirdb");
-            //const query = { userid: "3" };
-            dbo.collection("donator").find().toArray(function (err, result) {
-
-                if (err) {
-                    res.send({'error': 'Si è verificato un errore'});
-                    db.close();
-                } else {
-                    res.send(result);
-                    logger("info", 'Donators all request', 200, "GET", getClientIp(req), req.user);
-                    db.close();
-                }
-
-            });
-        });
-
-
-    });
-
-    /**
-     *   GET Request on collection donator on MongoDB by steamId
-     *   Ottengo tutti i donatori nella collection donator con lo steamId passato
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiestal
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations/id?steamId=76561197960737520 --> [...]
-     */
-
-
-    app.get('/donations/id', (req, res) => {
-
-        const url = db.url;
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            const dbo = db.db("alirdb");
-            let idVal = parseInt(req.param('steamId'));
-            let search = {userSteamId: idVal};
-
-            dbo.collection("donator").find(search).toArray(function (err, result) {
-
-                if (err) {
-                    res.send({'error': 'Si è verificato un errore'});
-                    db.close();
-                } else {
-                    res.send(result);
-                    logger("info", 'Donators by userSteamId request', 200, "GET", getClientIp(req), req.user);
-                    db.close();
-                }
-
-            });
-        });
-
-
-    });
-
-    /**
-     *   POST Request on collection donor on MongoDB
-     *   Aggiungo un donatore nella collection donor
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations?userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908&donationAmount=5
-     */
-
-    app.post('/donations', (req, res) => {
-
-        const url = db.url;
-
-        const userId = req.param('userId');
-        const donationDate = req.param('donationDate');
-        const expirationDate = req.param('expirationDate');
-        const userSteamId = req.param('userSteamId');
-        const adminNotes = req.param('adminNotes');
-        const donationAmount = req.param('donationAmount');
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("alirdb");
-
-            // Documento da aggiungere
-            const line = {
-                userId: parseInt(userId),
-                donationDate: new Date(donationDate),
-                expirationDate: new Date(expirationDate),
-                userSteamId: parseInt(userSteamId),
-                donationAmount: parseInt(donationAmount),
-                adminNotes: adminNotes
-            };
-
-            dbo.collection("donator").insertOne(line, function (err) {
-
-                if (err) {
-                    res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor insert request', 500, "POST", getClientIp(req), req.user);
-                    db.close();
-                } else {
-                    res.send({
-                        'info': 'Dati inseriti correttamente',
-                        'insertData': line
-                    });
-                    logger("info", 'Donor insert request', 200, "POST", getClientIp(req), req.user);
-                    db.close();
-                }
-
-            });
-        });
-
-
-    });
-
-    /**
-     *   DELETE Request on collection donor on MongoDB
-     *   Rimuovo un donatore dalla collection donor tramite l'_id mongo
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations?id=5a8ecaebd9329c134b71f6a5
-     */
-
-    app.delete('/donations', (req, res) => {
-
-        const url = db.url;
-
-        const id = req.param('id');
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            const dbo = db.db("alirdb");
-
-            // Documento da aggiungere
-            const line = {
-                _id: new mongo.ObjectID(id),
-            };
-
-            dbo.collection("donator").deleteOne(line, function (err) {
-
-                if (err) {
-                    res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor delete request', 500, "DELETE", getClientIp(req), req.user);
-                    db.close();
-                } else {
-                    res.send({
-                        'info': 'Rimozione effettuata con successo',
-                        'removedData': line
-                    });
-                    logger("info", 'Donor delete request', 200, "DELETE", getClientIp(req), req.user);
-                    db.close();
-                }
-
-            });
-        });
-
-
-    });
-
-    /**
-     *   PUT Request on collection donor on MongoDB
-     *   Aggiorno un donatore dalla collection donor tramite l'_id mongo
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donations?id=5a8ecaebd9329c134b71f6a5&userId=4&donationDate=2016-05-18T16:00:00Z&expirationDate=2016-05-18T16:00:00Z&userSteamId=76561197971046908&donationAmount=5
-     */
-
-    app.put('/donations', (req, res) => {
-
-        const url = db.url;
-
-        const id = req.param('id');
-        const userId = req.param('userId');
-        const donationDate = req.param('donationDate');
-        const expirationDate = req.param('expirationDate');
-        const userSteamId = req.param('userSteamId');
-        const adminNotes = req.param('adminNotes');
-        const donationAmount = req.param('donationAmount');
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            const dbo = db.db("alirdb");
-
-            // Documento da aggiungere
-            const selector = {
-                _id: mongo.ObjectID(id),
-            };
-
-            const updated = {
-                userId: parseInt(userId),
-                donationDate: new Date(donationDate),
-                expirationDate: new Date(expirationDate),
-                userSteamId: parseInt(userSteamId),
-                donationAmount: parseInt(donationAmount),
-                adminNotes: adminNotes
-            };
-
-            dbo.collection("donator").update(selector, updated, function (err) {
-
-                if (err) {
-                    res.send({'error': 'Si è verificato un errore'});
-                    logger("error", 'Donor edit request', 500, "PUT", getClientIp(req), req.user);
-                    db.close();
-                } else {
-                    res.send({
-                        'info': 'Aggiornamento effettuato con successo!',
-                        'updatedData': updated
-                    });
-                    logger("info", 'Donor edit request', 200, "PUT", getClientIp(req), req.user);
-                    db.close();
-                }
-
-            });
-        });
-
-
-    });
-
-    /**
-     *   GET Checksec, convalido il login lato utente sulla pagina con il remoto
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/checksec --> [{200: "Accesso riuscito"}]
-     */
-
-    app.get('/checksec', (req, res) => {
-
-        res.send({200: "Accesso riuscito"});
-
     });
 
     /**
@@ -1045,9 +786,9 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
      */
 
-    app.get('/steam/game/:appid/achievements', function (req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=' + steamK + '&appid=' + req.params.appid;
-        request.get(url, function (error, steamHttpResponse, steamHttpBody) {
+    app.get('/steam/game/:appid/achievements', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(steamHttpBody);
         });
@@ -1061,9 +802,9 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
      */
 
-    app.get('/steam/users/:steamid/data', function (req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + steamK + '&steamids=' + req.params.steamid;
-        request.get(url, function (error, steamHttpResponse, steamHttpBody) {
+    app.get('/steam/users/:steamid/data', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+ steamK +'&steamids=' + req.params.steamid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(steamHttpBody);
         });
@@ -1077,9 +818,9 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
      */
 
-    app.get('/steam/users/:steamid/ban', function (req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=' + steamK + '&steamids=' + req.params.steamid;
-        request.get(url, function (error, steamHttpResponse, steamHttpBody) {
+    app.get('/steam/users/:steamid/ban', function(req, res, next) {
+        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key='+ steamK +'&steamids=' + req.params.steamid;
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(steamHttpBody);
         });
@@ -1093,9 +834,9 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
      */
 
-    app.get('/steam/arma/news', function (req, res, next) {
+    app.get('/steam/arma/news', function(req, res, next) {
         let url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=107410&count=10&maxlength=300&format=json';
-        request.get(url, function (error, steamHttpResponse, steamHttpBody) {
+        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(steamHttpBody);
         });
@@ -1111,9 +852,9 @@ module.exports = function (app) {
 
     const keyARm = "bcdzrsb2sy4nfdpb3w9g2fk7f5kqre04c2k";
 
-    app.get('/server/data', function (req, res, next) {
+    app.get('/server/data', function(req, res, next) {
         let url = 'https://arma3-servers.net/api/?object=servers&element=detail&key=' + keyARm;
-        request.get(url, function (error, httpResponse, httpBody) {
+        request.get(url, function(error, httpResponse, httpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(httpBody);
         });
