@@ -42,9 +42,9 @@ app.use(function(req, res, next) {
     }
 });
 
-basic.on('success', (result, req) => {
+/*basic.on('success', (result, req) => {
     winston.info("User " + result.user + " authenticated");
-});
+});*/
 
 basic.on('fail', (result, req) => {
     winston.warn("User " + result.user + " authentication failed");
