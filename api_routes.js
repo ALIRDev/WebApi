@@ -2,6 +2,7 @@ const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 const winston        = require('winston');
 const request        = require('request');
+const cron           = require('node-cron');
 
 // Path file-system
 const playersJson    = "/alirdb/player.json";
@@ -38,6 +39,25 @@ module.exports = function (app) {
             authUser: loggedUsers
         });
     }
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE HOMEPAGE
+     *   -------------------------------------------------
+     */
+
+    const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";
+    let url1 = "https://cors-anywhere.herokuapp.com/https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=75,40,116,153&sortDir=desc&hidden=0";
+    let url2 = "https://cors-anywhere.herokuapp.com/https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";
+
+    /**
+     *   Job cron per il salvataggio dei file su disco dei dati
+     *   @param: req = Url della richiesta
+     */
+
+    cron.schedule('1 * * * * *', function(){
+        console.log( new Date + 'running every minute 1, 2, 4 and 5');
+    });
 
     /**
      *   -------------------------------------------------
