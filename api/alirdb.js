@@ -2,19 +2,71 @@ const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 const winston        = require('winston');
 const request        = require('request');
+const cron           = require('node-cron');
+const https          = require('https');
 
 // Path file-system
-const playersJson    = "/alirdb/player.json";
-const gangsJson      = "/alirdb/gangs.json";
-const vehiclesJson   = "/alirdb/vehicles.json";
-const wantedJson     = "/alirdb/wanted.json";
-const usersJson      = "/alirdb/users.json";
-const fileEncrypt    = "utf8";
+const playersJson           = "/alirdb/player.json";
+const gangsJson             = "/alirdb/gangs.json";
+const vehiclesJson          = "/alirdb/vehicles.json";
+const wantedJson            = "/alirdb/wanted.json";
+const usersJson             = "/alirdb/users.json";
+const generalsForumFeed     = "/alirdb/forumGeneralFeed.json";
+const adviceForumFeed       = "/alirdb/forumAdviceFeed.json";
+const fileEncrypt           = "utf8";
 
 // TODO: HTTPS Request
 // TODO: Request counter
 
+// Ottengo l'indirizzo ip chiamante
+function getClientIp(req) {
+    let ipAddress;
+    let forwardedIpsStr = req.header('x-forwarded-for');
+    if (forwardedIpsStr) {
+        let forwardedIps = forwardedIpsStr.split(',');
+        ipAddress = forwardedIps[0];
+    }
+    if (!ipAddress) {
+        ipAddress = req.connection.remoteAddress;
+    }
+    return ipAddress;
+}
+
+function logger(level, text, responseCode, type, from, loggedUsers) {
+    winston.log(level, text + " - ", {
+        responseCode: responseCode,
+        type: type,
+        from: from,
+        authUser: loggedUsers
+    });
+}
+
 module.exports = function (app) {
+
+    const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";
+    let generalFeed = "https://alir.eu/api/forums/topics?key=10f9dfa58c23a1ab511fc2478672ebef&forums=75,40,116,153&sortDir=desc&hidden=0";
+    let adviceFeed = "https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";
+
+    /**
+     *   Job cron per il salvataggio dei file su disco dei dati
+     *   @param: req = Url della richiesta
+     */
+
+    cron.schedule('1 * * * * *', function(){
+
+        https.get(generalFeed, (res) => {
+            console.log('statusCode:', res.statusCode);
+            console.log('headers:', res.headers);
+
+            res.on('data', (d) => {
+                process.stdout.write(d);
+            });
+
+        }).on('error', (e) => {
+            console.error(e);
+        });
+
+    });
 
     // Ottengo l'indirizzo ip chiamante
     function getClientIp(req) {
@@ -38,6 +90,12 @@ module.exports = function (app) {
             authUser: loggedUsers
         });
     }
+
+    /**
+     *   -------------------------------------------------
+     *                 RICHIESTE HOMEPAGE
+     *   -------------------------------------------------
+     */
 
     /**
      *   -------------------------------------------------
@@ -647,222 +705,6 @@ module.exports = function (app) {
                     logger("info", 'Users request by steamid', 404, "GET", getClientIp(req), req.user)
                 }
             }
-        });
-    });
-
-    /**
-     *   GET List by donor !=1
-     *   @param: req = Url della richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/donor/1 --> [{....}]
-     */
-
-    app.get('/lists/donor/1', (req, res, next) => {
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-                res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Whitelist request for donor level 1', 500, "GET", getClientIp(req), req.user)
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                let level = "5";
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*donorlevel=1]', {data: obj, allowRegexp: false}).value;
-                // Lancio il risultato
-
-                res.send(result);
-                logger("info", 'Whitelist request for donor level 1', 200, "GET", getClientIp(req), req.user)
-            }
-        });
-    });
-
-    /**
-     *   GET List by donor !=2
-     *   @param: req = Url della richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/donor/2 --> [{....}]
-     */
-
-    app.get('/lists/donor/2', (req, res, next) => {
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-                res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Whitelist request for donor level 2', 500, "GET", getClientIp(req), req.user)
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                let level = "5";
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*donorlevel>=2]', {data: obj, allowRegexp: false}).value;
-                // Lancio il risultato
-
-                res.send(result);
-                logger("info", 'Whitelist request for donor level 2', 200, "GET", getClientIp(req), req.user)
-            }
-        });
-    });
-
-    /**
-     *   GET Donor stats
-     *   @param: req = Url della richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donor/stats --> [{"onelev": int,"twolev": int}]
-     */
-
-    app.get('/donor/stats', (req, res, next) => {
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-                res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Stats request for donations', 500, "GET", getClientIp(req), req.user)
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-
-                let leve1 = jsonQuery('rows[**][*donorlevel=1]', {data: obj, allowRegexp: false}).value;
-                let leve2 = jsonQuery('rows[**][*donorlevel>=2]', {data: obj, allowRegexp: false}).value;
-
-                let onelenght = leve1.length;
-                let twolenght = leve2.length;
-
-                res.send({"onelev": onelenght,"twolev": twolenght});
-                logger("info", 'Stats request for donations', 200, "GET", getClientIp(req), req.user)
-            }
-        });
-    });
-
-    /**
-     *   -------------------------------------------------
-     *                 RICHIESTE YOUTUBE
-     *   -------------------------------------------------
-     */
-
-    /**
-     *   GET Live status test
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/jhonny/live/embed --> [{"ok":"Sistema online"}]
-     *
-     *                     ---   NOT USED   ---
-     */
-
-    app.get('/jhonny/live/embed', (req, res, next) => {
-
-        request({
-            url: 'https://www.googleapis.com/youtube/v3/search',
-            method: 'GET',
-            data: {
-                part: 'snippet',
-                channelId: 'UCHfZlJ0hl47QH8DGmnIRjoA',
-                key: 'AIzaSyA3C-U46hytCRtFgU_nld_Zh_yF2jd5jnE',
-                eventType: 'live',
-                type: 'video'
-            }
-        }, function (err, res, body) {
-            console.log(body);
-            // TODO: Per completare la richiesta è necessario essere https :(
-        });
-
-        res.send({"ok": "Sistema online"});
-        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
-    });
-
-    /**
-     *   -------------------------------------------------
-     *                 RICHIESTE STEAM
-     *   -------------------------------------------------
-     */
-
-    const steamK = "7FC5C2ACE4CA1A33929ABAD8F5843B59";
-
-    /**
-     *   GET games achievements (Ottengo l'elenco dei trofei per un determinato gioco)
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
-     */
-
-    app.get('/steam/game/:appid/achievements', function(req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
-        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(steamHttpBody);
-        });
-    });
-
-    /**
-     *   GET user steam data
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
-     */
-
-    app.get('/steam/users/:steamid/data', function(req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+ steamK +'&steamids=' + req.params.steamid;
-        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(steamHttpBody);
-        });
-    });
-
-    /**
-     *   GET user steam data
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
-     */
-
-    app.get('/steam/users/:steamid/ban', function(req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key='+ steamK +'&steamids=' + req.params.steamid;
-        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(steamHttpBody);
-        });
-    });
-
-    /**
-     *   GET Arma 3 info
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
-     */
-
-    app.get('/steam/arma/news', function(req, res, next) {
-        let url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=107410&count=10&maxlength=300&format=json';
-        request.get(url, function(error, steamHttpResponse, steamHttpBody) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(steamHttpBody);
-        });
-    });
-
-    /**
-     *   -------------------------------------------------
-     *                 RICHIESTE ARMA3SERVER
-     *   -------------------------------------------------
-     */
-
-    /**
-     *   GET Arma 3 server info
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/server/data --> [{"...."}]
-     */
-
-    const keyA3S = "bcdzrsb2sy4nfdpb3w9g2fk7f5kqre04c2k";
-
-    app.get('/server/data', function(req, res, next) {
-        let url = 'https://arma3-servers.net/api/?object=servers&element=detail&key=' + keyA3S;
-        request.get(url, function(error, httpResponse, httpBody) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(httpBody);
         });
     });
 

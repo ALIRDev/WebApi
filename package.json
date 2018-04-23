@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "devDependencies": {
-    "nodemon": "^1.17.2"
+    "nodemon": "^1.17.3"
   },
   "dependencies": {
     "cors": "^2.8.4",
@@ -18,8 +18,9 @@
     "https": "^1.0.0",
     "ip": "^1.1.5",
     "json-query": "^2.2.2",
+    "node-cron": "^1.2.1",
     "request": "^2.85.0",
-    "winston": "^2.4.1"
+    "winston": "^2.4.2"
   },
   "license": "MIT"
 }

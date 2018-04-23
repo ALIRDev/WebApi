@@ -1,7 +1,10 @@
 const express        = require('express');
 const ip             = require("ip");
 const app            = express();
-const routes         = require('./api_routes');
+const alirdb         = require('./api/alirdb');
+const users          = require('./api/users');
+const steam          = require('./api/steam');
+const donations      = require('./api/donations');
 const auth           = require('http-auth');
 const winston        = require('winston');
 const cors           = require('cors');
@@ -54,4 +57,11 @@ basic.on('error', (error, req) => {
     winston.error("Authentication error: " + error.code + " - " + error.message);
 });
 
-routes(app);
+// Richieste alirdb
+alirdb(app);
+// Richieste donazioni
+donations(app);
+// Utenze ipb
+users(app);
+// Richieste di Steam e di Arma3Servers
+steam(app);
