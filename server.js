@@ -6,7 +6,7 @@ const users          = require('./api/users');
 const steam          = require('./api/steam');
 const donations      = require('./api/donations');
 const auth           = require('http-auth');
-const winston        = require('winston');
+const morgan         = require('morgan');
 const cors           = require('cors');
 
     /* ---------------------------------- */
@@ -35,6 +35,8 @@ const corsOptions = {
     "optionsSuccessStatus": 204
 };
 
+app.use(morgan('dev'));
+
 app.use(cors(corsOptions));
 
 app.use(function(req, res, next) {
@@ -50,11 +52,11 @@ app.use(function(req, res, next) {
 });*/
 
 basic.on('fail', (result, req) => {
-    winston.warn("User " + result.user + " authentication failed");
+    console.warn("User " + result.user + " authentication failed");
 });
 
 basic.on('error', (error, req) => {
-    winston.error("Authentication error: " + error.code + " - " + error.message);
+    console.error("Authentication error: " + error.code + " - " + error.message);
 });
 
 // Richieste alirdb

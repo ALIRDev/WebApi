@@ -1,33 +1,9 @@
 const fs             = require("file-system");
 const jsonQuery      = require('json-query');
-const winston        = require('winston');
 
 // Path file-system
 const playersJson           = "/alirdb/player.json";
 const fileEncrypt           = "utf8";
-
-// Ottengo l'indirizzo ip chiamante
-function getClientIp(req) {
-    let ipAddress;
-    let forwardedIpsStr = req.header('x-forwarded-for');
-    if (forwardedIpsStr) {
-        let forwardedIps = forwardedIpsStr.split(',');
-        ipAddress = forwardedIps[0];
-    }
-    if (!ipAddress) {
-        ipAddress = req.connection.remoteAddress;
-    }
-    return ipAddress;
-}
-
-function logger(level, text, responseCode, type, from, loggedUsers) {
-    winston.log(level, text + " - ", {
-        responseCode: responseCode,
-        type: type,
-        from: from,
-        authUser: loggedUsers
-    });
-}
 
 module.exports = function (app) {
 
@@ -43,7 +19,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Whitelist request for donor level 1', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -53,7 +29,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'Whitelist request for donor level 1', 200, "GET", getClientIp(req), req.user)
+
             }
         });
     });
@@ -70,7 +46,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Whitelist request for donor level 2', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -80,7 +56,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'Whitelist request for donor level 2', 200, "GET", getClientIp(req), req.user)
+
             }
         });
     });
@@ -97,7 +73,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Stats request for donations', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -109,7 +85,7 @@ module.exports = function (app) {
                 let twolenght = leve2.length;
 
                 res.send({"onelev": onelenght,"twolev": twolenght});
-                logger("info", 'Stats request for donations', 200, "GET", getClientIp(req), req.user)
+
             }
         });
     });

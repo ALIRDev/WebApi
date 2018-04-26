@@ -1,31 +1,7 @@
-const winston        = require('winston');
 const request        = require('request');
 
 // TODO: HTTPS Request
 // TODO: Request counter
-
-// Ottengo l'indirizzo ip chiamante
-function getClientIp(req) {
-    let ipAddress;
-    let forwardedIpsStr = req.header('x-forwarded-for');
-    if (forwardedIpsStr) {
-        let forwardedIps = forwardedIpsStr.split(',');
-        ipAddress = forwardedIps[0];
-    }
-    if (!ipAddress) {
-        ipAddress = req.connection.remoteAddress;
-    }
-    return ipAddress;
-}
-
-function logger(level, text, responseCode, type, from, loggedUsers) {
-    winston.log(level, text + " - ", {
-        responseCode: responseCode,
-        type: type,
-        from: from,
-        authUser: loggedUsers
-    });
-}
 
 module.exports = function (app) {
 
