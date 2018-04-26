@@ -7,7 +7,7 @@ const steamK = "7FC5C2ACE4CA1A33929ABAD8F5843B59";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'ALIR - WebApi' });
+  res.render('index', { title: 'ALIR - WebApi' , explanation: 'Il sistema funziona correttamente'});
 });
 
 /**

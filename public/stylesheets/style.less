@@ -1,8 +1,28 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+// Color variables (appears count calculates by raw css)
+@color0: #ffffff; // Appears 3 times
+@color1: #1d1f20; // Appears 2 times
 
-a {
-  color: #00B7FF;
+
+
+body {
+  background-color: @color1;
+  color: @color0;
+  font-family: 'Raleway', sans-serif;
+}
+h1 {
+  font-family: 'Ubuntu', sans-serif;
+}
+button {
+  background-color: @color1;
+  border-radius: 0.5rem;
+  border: solid @color0;
+  color: @color0;
+  font-size: 2rem;
+  padding: 0.5rem;
+}
+.cp {
+  cursor: pointer;
+}
+.container {
+  text-align: center;
 }
