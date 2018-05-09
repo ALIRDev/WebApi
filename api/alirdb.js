@@ -19,9 +19,9 @@ const fileEncrypt           = "utf8";
 
 module.exports = function (app) {
 
-    const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";
-    let generalFeed = "https://alir.eu/api/forums/topics?key=10f9dfa58c23a1ab511fc2478672ebef&forums=75,40,116,153&sortDir=desc&hidden=0";
-    let adviceFeed = "https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";
+    /* const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";*/
+    /* let generalFeed = "https://alir.eu/api/forums/topics?key=10f9dfa58c23a1ab511fc2478672ebef&forums=75,40,116,153&sortDir=desc&hidden=0";
+    let adviceFeed = "https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";*/
 
     /**
      *   Job cron per il salvataggio dei file su disco dei dati
@@ -183,7 +183,6 @@ module.exports = function (app) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
-
             } else {
 
                 // Parse del JSON locale
@@ -195,7 +194,6 @@ module.exports = function (app) {
                 let sliced = result.slice(0, size);
 
                 res.send(sliced);
-
 
             }
         });
@@ -225,7 +223,6 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-
 
             }
         });
@@ -296,7 +293,6 @@ module.exports = function (app) {
 
                 res.send({size: lenght});
 
-
             }
         });
     });
@@ -333,7 +329,6 @@ module.exports = function (app) {
 
                 } else {
                     res.send({404: "Nessun ricercato trovato"});
-
                 }
             }
         });
