@@ -2,7 +2,7 @@
 
 ## Introduzione
 
-AlirAPI è un'applicativo node.js, che espone delle api sulla porta 8000 di seguito l'elenco:
+AlirAPI è un'applicativo node.js, che espone delle api sulla porta 8190 di seguito l'elenco:
 
 ## Richieste
 

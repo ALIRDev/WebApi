@@ -11,7 +11,7 @@ module.exports = function (app) {
      *   GET List by donor !=1
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/donor/1 --> [{....}]
+     *   @example: http://192.168.30.77:8190/lists/donor/1 --> [{....}]
      */
 
     app.get('/lists/donor/1', (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports = function (app) {
      *   GET List by donor !=2
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/donor/2 --> [{....}]
+     *   @example: http://192.168.30.77:8190/lists/donor/2 --> [{....}]
      */
 
     app.get('/lists/donor/2', (req, res, next) => {
@@ -65,7 +65,7 @@ module.exports = function (app) {
      *   GET Donor stats
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/donor/stats --> [{"onelev": int,"twolev": int}]
+     *   @example: http://192.168.30.77:8190/donor/stats --> [{"onelev": int,"twolev": int}]
      */
 
     app.get('/donor/stats', (req, res, next) => {

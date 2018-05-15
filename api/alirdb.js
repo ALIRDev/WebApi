@@ -51,7 +51,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/status --> {"Stato":"Online","Ultimo aggiornamento":"2018-5-15 11:56"}
+     *   @example: http://192.168.30.77:8190/status --> {"Stato":"Online","Ultimo aggiornamento":"2018-5-15 11:56"}
      */
 
     app.get('/status', (req, res, next) => {
@@ -71,7 +71,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/players/lenght --> [{56}]
      */
 
     app.get('/players/lenght/', (req, res, next) => {
@@ -99,7 +99,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
+     *   @example: http://192.168.30.77:8190/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
      */
 
     app.get('/players/:playerid', (req, res, next) => {
@@ -138,7 +138,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/name/Fake --> [{name: "Fake", ....}]
+     *   @example: http://192.168.30.77:8190/players/name/Fake --> [{name: "Fake", ....}]
      */
 
     app.get('/players/name/:name', (req, res, next) => {
@@ -176,7 +176,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/lists/100 --> [{....}]
+     *   @example: http://192.168.30.77:8190/players/lists/100 --> [{....}]
      */
 
     app.get('/players/lists/:size', (req, res, next) => {
@@ -208,7 +208,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/vehicles/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/vehicles/lenght --> [{56}]
      */
 
     app.get('/vehicles/lenght/', (req, res, next) => {
@@ -237,7 +237,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
+     *   @example: http://192.168.30.77:8190/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
      */
 
     app.get('/vehicles/:pid', (req, res, next) => {
@@ -277,7 +277,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/wanted/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/wanted/lenght --> [{56}]
      */
 
     app.get('/wanted/lenght/', (req, res, next) => {
@@ -306,7 +306,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
+     *   @example: http://192.168.30.77:8190/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
      */
 
     app.get('/wanted/:wantedID', (req, res, next) => {
@@ -343,7 +343,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/gangs/lenght --> [{56}]
      */
 
     app.get('/gangs/lenght/', (req, res, next) => {
@@ -373,7 +373,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs --> [{..},{..}]
+     *   @example: http://192.168.30.77:8190/gangs --> [{..},{..}]
      */
 
     app.get('/gangs/', (req, res, next) => {
@@ -410,7 +410,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/Mano --> [{name: "Mano nera", ....}]
+     *   @example: http://192.168.30.77:8190/gangs/Mano --> [{name: "Mano nera", ....}]
      */
 
     app.get('/gangs/:name', (req, res, next) => {
@@ -447,7 +447,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
+     *   @example: http://192.168.30.77:8190/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
      */
 
     app.get('/gangs/id/:playerid', (req, res, next) => {
@@ -499,7 +499,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/users/lenght --> [{56}]
      */
 
     app.get('/users/lenght/', (req, res, next) => {
@@ -529,7 +529,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiestagithj
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/id/3 --> [{id: "3", ....}]
+     *   @example: http://192.168.30.77:8190/users/id/3 --> [{id: "3", ....}]
      */
 
     app.get('/users/id/:id', (req, res, next) => {
@@ -563,7 +563,7 @@ module.exports = function (app) {
      *   GET List by cop
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/cop --> [{coplevel: "3", ....}]
+     *   @example: http://192.168.30.77:8190/lists/cop --> [{coplevel: "3", ....}]
      */
 
     app.get('/lists/cop/', (req, res, next) => {
@@ -590,7 +590,7 @@ module.exports = function (app) {
      *   GET List by med
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/med --> [{mediclevel: "3", ....}]
+     *   @example: http://192.168.30.77:8190/lists/med --> [{mediclevel: "3", ....}]
      */
 
     app.get('/lists/med/', (req, res, next) => {
@@ -618,7 +618,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
+     *   @example: http://192.168.30.77:8190/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
      */
 
     app.get('/users/:steamid', (req, res, next) => {
