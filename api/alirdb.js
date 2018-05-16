@@ -4,10 +4,10 @@ const request        = require('request');
 
 // Path file-system
 const playersJson           = "/webapi/today/player.json";
-const gangsJson             = "/alirdb/gangs.json";
-const vehiclesJson          = "/alirdb/vehicles.json";
-const wantedJson            = "/alirdb/wanted.json";
-const usersJson             = "/alirdb/users.json";
+const gangsJson             = "/home/andreacw/webapi/today/gangs.json";
+const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
+const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
+const usersJson             = "/home/andreacw/webapi/today/users.json";
 const fileEncrypt           = "utf8";
 
 module.exports = function (app) {

@@ -2,7 +2,7 @@ const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 
 // Path file-system
-const playersJson           = "/alirdb/player.json";
+const playersJson           = "/home/andreacw/webapi/today/player.json";
 const fileEncrypt           = "utf8";
 
 module.exports = function (app) {
