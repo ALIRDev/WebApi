@@ -8,19 +8,33 @@ const donations      = require('./api/donations');
 const auth           = require('http-auth');
 const morgan         = require('morgan');
 const cors           = require('cors');
+const https          = require('https');
+const fs             = require("fs");
 
-    /* ---------------------------------- */
+/* ---------------------------------- */
 
 const port           = 8190;
 const HOST           = ip.address();
 
 /* ---------------------------------- */
 
+const key = fs.readFileSync('/home/andreacw/webapi/key/server.key');
+const cert = fs.readFileSync( '/home/andreacw/webapi/key/server.crt' );
+const ca = fs.readFileSync( '/home/andreacw/webapi/key/ca.crt' );
+
+const options = {
+    key: key,
+    cert: cert,
+    ca: ca
+};
+
 app.listen(port, HOST);
 
 console.log("   ----  ALIR WebApi  ----   ");
 
 console.log(`In esecuzione su http://${HOST}:${port}`);
+
+// TODO: HTTPS Request
 
 const basic = auth.basic({
         realm: "ALIRWebApi",
@@ -67,3 +81,5 @@ donations(app);
 users(app);
 // Richieste di Steam e di Arma3Servers
 steam(app);
+
+https.createServer(options, app).listen(8191);

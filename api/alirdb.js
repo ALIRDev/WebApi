@@ -10,35 +10,7 @@ const wantedJson            = "/alirdb/wanted.json";
 const usersJson             = "/alirdb/users.json";
 const fileEncrypt           = "utf8";
 
-// TODO: HTTPS Request
-// TODO: Request counter
-
 module.exports = function (app) {
-
-    /* const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";*/
-    /* let generalFeed = "https://alir.eu/api/forums/topics?key=10f9dfa58c23a1ab511fc2478672ebef&forums=75,40,116,153&sortDir=desc&hidden=0";
-    let adviceFeed = "https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";*/
-
-    /**
-     *   Job cron per il salvataggio dei file su disco dei dati
-     *   @param: req = Url della richiesta
-     */
-
-    /*cron.schedule('1 * * * * *', function(){
-
-        https.get(generalFeed, (res) => {
-            console.log('statusCode:', res.statusCode);
-            console.log('headers:', res.headers);
-
-            res.on('data', (d) => {
-                process.stdout.write(d);
-            });
-
-        }).on('error', (e) => {
-            console.error(e);
-        });
-
-    });*/
 
     /**
      *   -------------------------------------------------
@@ -123,7 +95,6 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-
 
                 } else {
                     res.send({404: "Nessun giocatore trovato"});
