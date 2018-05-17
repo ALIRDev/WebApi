@@ -6,15 +6,27 @@ const users          = require('./api/users');
 const steam          = require('./api/steam');
 const donations      = require('./api/donations');
 const auth           = require('http-auth');
-const winston        = require('winston');
+const morgan         = require('morgan');
 const cors           = require('cors');
+const https          = require('https');
+const fs             = require("fs");
 
-    /* ---------------------------------- */
+/* ---------------------------------- */
 
-const port           = 8000;
+const port           = 8190;
 const HOST           = ip.address();
 
 /* ---------------------------------- */
+
+//const key = fs.readFileSync('/home/andreacw/webapi/key/server.key');
+//const cert = fs.readFileSync( '/home/andreacw/webapi/key/server.crt' );
+//const ca = fs.readFileSync( '/home/andreacw/webapi/key/ca.crt' );
+
+/*const options = {
+    key: key,
+    cert: cert,
+    ca: ca
+};*/
 
 app.listen(port, HOST);
 
@@ -22,11 +34,15 @@ console.log("   ----  ALIR WebApi  ----   ");
 
 console.log(`In esecuzione su http://${HOST}:${port}`);
 
+// TODO: HTTPS Request
+
 const basic = auth.basic({
         realm: "ALIRWebApi",
         file: "./htpasswd/user.htpasswd"
     }
 );
+
+//https.createServer(options, app).listen(8191);
 
 const corsOptions = {
     "origin": "*",
@@ -34,6 +50,8 @@ const corsOptions = {
     "preflightContinue": false,
     "optionsSuccessStatus": 204
 };
+
+app.use(morgan('dev'));
 
 app.use(cors(corsOptions));
 
@@ -50,11 +68,11 @@ app.use(function(req, res, next) {
 });*/
 
 basic.on('fail', (result, req) => {
-    winston.warn("User " + result.user + " authentication failed");
+    console.warn("User " + result.user + " authentication failed");
 });
 
 basic.on('error', (error, req) => {
-    winston.error("Authentication error: " + error.code + " - " + error.message);
+    console.error("Authentication error: " + error.code + " - " + error.message);
 });
 
 // Richieste alirdb

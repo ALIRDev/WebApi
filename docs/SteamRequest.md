@@ -3,7 +3,7 @@
 Ottengo la lista dei trofei di un determinato gioco tramite appId
 
 ```
-http://192.168.30.77:8000/steam/game/8930/achievements
+http://192.168.30.77:8190/steam/game/8930/achievements
 ```
 
 ###### GET User ban by steamId
@@ -11,7 +11,7 @@ http://192.168.30.77:8000/steam/game/8930/achievements
 Ottengo i ban a carico di un'utente dallo steamID
 
 ```
-http://192.168.30.77:8000/steam/users/76561197960435530/ban
+http://192.168.30.77:8190/steam/users/76561197960435530/ban
 ```
 
 ###### GET User data by steamId
@@ -19,7 +19,7 @@ http://192.168.30.77:8000/steam/users/76561197960435530/ban
 Ottengo i dati principali di un'utente dallo steamID
 
 ```
-http://192.168.30.77:8000/steam/users/76561197960435530/data
+http://192.168.30.77:8190/steam/users/76561197960435530/data
 ```
 
 ###### GET Arma 3 info
@@ -27,5 +27,5 @@ http://192.168.30.77:8000/steam/users/76561197960435530/data
 Ottengo le news di arma 3 da steam
 
 ```
-http://192.168.30.77:8000/steam/arma/news
+http://192.168.30.77:8190/steam/arma/news
 ```

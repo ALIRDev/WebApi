@@ -1,31 +1,7 @@
-const winston        = require('winston');
 const request        = require('request');
 
 // TODO: HTTPS Request
 // TODO: Request counter
-
-// Ottengo l'indirizzo ip chiamante
-function getClientIp(req) {
-    let ipAddress;
-    let forwardedIpsStr = req.header('x-forwarded-for');
-    if (forwardedIpsStr) {
-        let forwardedIps = forwardedIpsStr.split(',');
-        ipAddress = forwardedIps[0];
-    }
-    if (!ipAddress) {
-        ipAddress = req.connection.remoteAddress;
-    }
-    return ipAddress;
-}
-
-function logger(level, text, responseCode, type, from, loggedUsers) {
-    winston.log(level, text + " - ", {
-        responseCode: responseCode,
-        type: type,
-        from: from,
-        authUser: loggedUsers
-    });
-}
 
 module.exports = function (app) {
 
@@ -42,7 +18,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/game/292030/achievements --> [{games: "...."}]
+     *   @example: http://192.168.30.77:8190/steam/game/292030/achievements --> [{games: "...."}]
      */
 
     app.get('/steam/game/:appid/achievements', function(req, res, next) {
@@ -58,7 +34,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
 
     app.get('/steam/users/:steamid/data', function(req, res, next) {
@@ -74,7 +50,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/users/76561197960435530/data --> [{"...."}]
+     *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
 
     app.get('/steam/users/:steamid/ban', function(req, res, next) {
@@ -90,7 +66,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/steam/arma/news --> [{"...."}]
+     *   @example: http://192.168.30.77:8190/steam/arma/news --> [{"...."}]
      */
 
     app.get('/steam/arma/news', function(req, res, next) {

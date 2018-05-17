@@ -1,101 +1,16 @@
 const fs             = require("file-system");
 const jsonQuery      = require('json-query');
-const winston        = require('winston');
 const request        = require('request');
-const cron           = require('node-cron');
-const https          = require('https');
 
 // Path file-system
-const playersJson           = "/alirdb/player.json";
-const gangsJson             = "/alirdb/gangs.json";
-const vehiclesJson          = "/alirdb/vehicles.json";
-const wantedJson            = "/alirdb/wanted.json";
-const usersJson             = "/alirdb/users.json";
-const generalsForumFeed     = "/alirdb/forumGeneralFeed.json";
-const adviceForumFeed       = "/alirdb/forumAdviceFeed.json";
+const playersJson           = "/home/andreacw/webapi/today/player.json";
+const gangsJson             = "/home/andreacw/webapi/today/gangs.json";
+const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
+const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
+const usersJson             = "/home/andreacw/webapi/today/users.json";
 const fileEncrypt           = "utf8";
 
-// TODO: HTTPS Request
-// TODO: Request counter
-
-// Ottengo l'indirizzo ip chiamante
-function getClientIp(req) {
-    let ipAddress;
-    let forwardedIpsStr = req.header('x-forwarded-for');
-    if (forwardedIpsStr) {
-        let forwardedIps = forwardedIpsStr.split(',');
-        ipAddress = forwardedIps[0];
-    }
-    if (!ipAddress) {
-        ipAddress = req.connection.remoteAddress;
-    }
-    return ipAddress;
-}
-
-function logger(level, text, responseCode, type, from, loggedUsers) {
-    winston.log(level, text + " - ", {
-        responseCode: responseCode,
-        type: type,
-        from: from,
-        authUser: loggedUsers
-    });
-}
-
 module.exports = function (app) {
-
-    const serverKey = "10f9dfa58c23a1ab511fc2478672ebef";
-    let generalFeed = "https://alir.eu/api/forums/topics?key=10f9dfa58c23a1ab511fc2478672ebef&forums=75,40,116,153&sortDir=desc&hidden=0";
-    let adviceFeed = "https://alir.eu/api/forums/topics?key=" + serverKey + "&forums=112&sortDir=desc&hidden=0";
-
-    /**
-     *   Job cron per il salvataggio dei file su disco dei dati
-     *   @param: req = Url della richiesta
-     */
-
-    cron.schedule('1 * * * * *', function(){
-
-        https.get(generalFeed, (res) => {
-            console.log('statusCode:', res.statusCode);
-            console.log('headers:', res.headers);
-
-            res.on('data', (d) => {
-                process.stdout.write(d);
-            });
-
-        }).on('error', (e) => {
-            console.error(e);
-        });
-
-    });
-
-    // Ottengo l'indirizzo ip chiamante
-    function getClientIp(req) {
-        let ipAddress;
-        let forwardedIpsStr = req.header('x-forwarded-for');
-        if (forwardedIpsStr) {
-            let forwardedIps = forwardedIpsStr.split(',');
-            ipAddress = forwardedIps[0];
-        }
-        if (!ipAddress) {
-            ipAddress = req.connection.remoteAddress;
-        }
-        return ipAddress;
-    }
-
-    function logger(level, text, responseCode, type, from, loggedUsers) {
-        winston.log(level, text + " - ", {
-            responseCode: responseCode,
-            type: type,
-            from: from,
-            authUser: loggedUsers
-        });
-    }
-
-    /**
-     *   -------------------------------------------------
-     *                 RICHIESTE HOMEPAGE
-     *   -------------------------------------------------
-     */
 
     /**
      *   -------------------------------------------------
@@ -108,12 +23,19 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/status --> [{"ok":"Sistema online"}]
+     *   @example: http://192.168.30.77:8190/status --> {"Stato":"Online","Ultimo aggiornamento":"2018-5-15 11:56"}
      */
 
     app.get('/status', (req, res, next) => {
-        res.send({"ok": "Sistema online"});
-        logger("info", 'Status request', 200, "GET", getClientIp(req), req.user);
+        let stats = fs.statSync(playersJson);
+        let UTCTime = stats.ctime;
+        let options = { timeZone: "Europe/Rome", day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'};
+        let formatter = new Intl.DateTimeFormat([], options);
+
+        res.send({
+           "Stato" : "Online",
+           "Ultimo aggiornamento" : formatter.format(new Date(UTCTime))
+        })
     });
 
     /**
@@ -121,7 +43,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/players/lenght --> [{56}]
      */
 
     app.get('/players/lenght/', (req, res, next) => {
@@ -129,7 +51,6 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players lenght request', 500, "GET", getClientIp(req), req.user)
 
             } else {
                 // Parse del JSON locale
@@ -141,85 +62,50 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Players lenght request', 200, "GET", getClientIp(req), req.user)
-
             }
         });
     });
 
     /**
-     *   GET Players by playerid
+     *   GET Players find
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
+     *   @example: http://37.59.102.107:8190/players/find/76561198037236088 --> [{playerid: "76561197960737527", ....}]
+     *   @example: http://37.59.102.107:8190/players/find/Cola --> [{name: "Bob", ....}]
      */
 
-    app.get('/players/:playerid', (req, res, next) => {
+    app.get('/players/find/:searchValue', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
-        const playerid = req.params.playerid;
+        const searchValue = req.params.searchValue;
 
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players request by playerid', 500, "GET", getClientIp(req), req.user)
 
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*playerid~/^' + playerid + '/i]', {
-                    data: obj,
-                    allowRegexp: true
-                }).value;
-                // Lancio il risultato
 
-                if (result.length > 0) {
-                    res.send(result);
-                    logger("info", 'Players request by playerid', 200, "GET", getClientIp(req), req.user)
+                let result;
 
-                } else {
-                    res.send({404: "Nessun giocatore trovato"});
-                    logger("info", 'Players request by playerid', 404, "GET", getClientIp(req), req.user)
-
+                if(isNaN(searchValue)){
+                    console.log(searchValue);
+                    result = jsonQuery('rows[**][*name~/' + searchValue + '/i]', {data: obj, allowRegexp: true}).value;
+                }else{
+                    console.log(searchValue);
+                     result = jsonQuery('rows[**][*playerid~/^' + searchValue + '/i]', {data: obj, allowRegexp: true}).value;
                 }
-            }
-        });
-    });
 
-    /**
-     *   GET Players by name
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/name/Fake --> [{name: "Fake", ....}]
-     */
-
-    app.get('/players/name/:name', (req, res, next) => {
-
-        // Prendo il pid dalla richiesta
-        const name = req.params.name;
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-                res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players request by name', 500, "GET", getClientIp(req), req.user)
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*name~/' + name + '/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Players request by name', 200, "GET", getClientIp(req), req.user)
 
                 } else {
                     res.send({404: "Nessun giocatore trovato"});
-                    logger("info", 'Players request by name', 404, "GET", getClientIp(req), req.user)
 
                 }
             }
@@ -231,7 +117,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/players/lists/100 --> [{....}]
+     *   @example: http://192.168.30.77:8190/players/lists/100 --> [{....}]
      */
 
     app.get('/players/lists/:size', (req, res, next) => {
@@ -241,7 +127,6 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Players list request', 500, "GET", getClientIp(req), req.user)
 
             } else {
 
@@ -254,7 +139,6 @@ module.exports = function (app) {
                 let sliced = result.slice(0, size);
 
                 res.send(sliced);
-                logger("info", 'Players list request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -265,7 +149,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/vehicles/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/vehicles/lenght --> [{56}]
      */
 
     app.get('/vehicles/lenght/', (req, res, next) => {
@@ -273,7 +157,7 @@ module.exports = function (app) {
         fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Vehicles lenght request', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -284,7 +168,6 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Vehicles lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -295,7 +178,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
+     *   @example: http://192.168.30.77:8190/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
      */
 
     app.get('/vehicles/:pid', (req, res, next) => {
@@ -306,7 +189,7 @@ module.exports = function (app) {
         fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -316,15 +199,15 @@ module.exports = function (app) {
 
                 if (err) {
                     res.send({"500": "Errore"});
-                    logger("error", 'Vehicles request by pid', 500, "GET", getClientIp(req), req.user)
+
                 }
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Vehicles request by pid', 200, "GET", getClientIp(req), req.user)
+
                 } else {
                     res.send({404: "Nessun veicolo trovato"});
-                    logger("info", 'Vehicles request by pid', 404, "GET", getClientIp(req), req.user)
+
                 }
             }
         });
@@ -335,7 +218,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/wanted/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/wanted/lenght --> [{56}]
      */
 
     app.get('/wanted/lenght/', (req, res, next) => {
@@ -343,7 +226,7 @@ module.exports = function (app) {
         fs.readFile(wantedJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Wanted lenght request', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -354,7 +237,6 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Wanted lenght request', 200, "GET", getClientIp(req), req.user)
 
             }
         });
@@ -365,7 +247,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
+     *   @example: http://192.168.30.77:8190/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
      */
 
     app.get('/wanted/:wantedID', (req, res, next) => {
@@ -376,7 +258,7 @@ module.exports = function (app) {
         fs.readFile(wantedJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Wanted request by wantedId', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -389,10 +271,9 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Wanted request by wantedId', 200, "GET", getClientIp(req), req.user)
+
                 } else {
                     res.send({404: "Nessun ricercato trovato"});
-                    logger("info", 'Wanted request by wantedId', 404, "GET", getClientIp(req), req.user)
                 }
             }
         });
@@ -403,7 +284,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/gangs/lenght --> [{56}]
      */
 
     app.get('/gangs/lenght/', (req, res, next) => {
@@ -411,7 +292,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs lenght request', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -422,7 +303,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Gangs lenght request', 200, "GET", getClientIp(req), req.user)
+
 
             }
         });
@@ -433,7 +314,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs --> [{..},{..}]
+     *   @example: http://192.168.30.77:8190/gangs --> [{..},{..}]
      */
 
     app.get('/gangs/', (req, res, next) => {
@@ -441,7 +322,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs list request', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -458,7 +339,7 @@ module.exports = function (app) {
                 }
 
                 res.send(array);
-                logger("info", 'Gangs list request', 200, "GET", getClientIp(req), req.user)
+
 
             }
         });
@@ -470,7 +351,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/Mano --> [{name: "Mano nera", ....}]
+     *   @example: http://192.168.30.77:8190/gangs/Mano --> [{name: "Mano nera", ....}]
      */
 
     app.get('/gangs/:name', (req, res, next) => {
@@ -481,7 +362,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs request by name', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -491,11 +372,11 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Gangs request by name', 200, "GET", getClientIp(req), req.user)
+
                 } else {
 
                     res.send({404: "not found"});
-                    logger("info", 'Gangs request by name', 404, "GET", getClientIp(req), req.user)
+
                 }
             }
         });
@@ -507,7 +388,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
+     *   @example: http://192.168.30.77:8190/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
      */
 
     app.get('/gangs/id/:playerid', (req, res, next) => {
@@ -518,7 +399,7 @@ module.exports = function (app) {
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Gangs request by id', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -537,7 +418,7 @@ module.exports = function (app) {
 
                         if (subres.members[y] === playerid) {
                             finalName = subres;
-                            logger("info", 'Gangs request by id', 200, "GET", getClientIp(req), req.user);
+
                             // impedisco ulteriori risultati
                             break;
                         }
@@ -559,7 +440,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/lenght --> [{56}]
+     *   @example: http://192.168.30.77:8190/users/lenght --> [{56}]
      */
 
     app.get('/users/lenght/', (req, res, next) => {
@@ -567,7 +448,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request lenght', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -578,7 +459,7 @@ module.exports = function (app) {
                 let lenght = result.length;
 
                 res.send({size: lenght});
-                logger("info", 'Users request lenght', 200, "GET", getClientIp(req), req.user)
+
 
             }
         });
@@ -589,7 +470,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiestagithj
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/id/3 --> [{id: "3", ....}]
+     *   @example: http://192.168.30.77:8190/users/id/3 --> [{id: "3", ....}]
      */
 
     app.get('/users/id/:id', (req, res, next) => {
@@ -600,7 +481,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request by id', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -610,10 +491,10 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Users request by id', 200, "GET", getClientIp(req), req.user)
+
                 } else {
                     res.send({404: "Nessun utente trovato"});
-                    logger("info", 'Users request by id', 404, "GET", getClientIp(req), req.user)
+
                 }
             }
         });
@@ -623,7 +504,7 @@ module.exports = function (app) {
      *   GET List by cop
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/cop --> [{coplevel: "3", ....}]
+     *   @example: http://192.168.30.77:8190/lists/cop --> [{coplevel: "3", ....}]
      */
 
     app.get('/lists/cop/', (req, res, next) => {
@@ -631,7 +512,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'List request for cop', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -641,7 +522,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'List request for cop', 200, "GET", getClientIp(req), req.user)
+
             }
         });
     });
@@ -650,7 +531,7 @@ module.exports = function (app) {
      *   GET List by med
      *   @param: req = Url della richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/lists/med --> [{mediclevel: "3", ....}]
+     *   @example: http://192.168.30.77:8190/lists/med --> [{mediclevel: "3", ....}]
      */
 
     app.get('/lists/med/', (req, res, next) => {
@@ -658,7 +539,7 @@ module.exports = function (app) {
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'List request for med', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -668,7 +549,7 @@ module.exports = function (app) {
                 // Lancio il risultato
 
                 res.send(result);
-                logger("info", 'List request for med', 200, "GET", getClientIp(req), req.user)
+
             }
         });
     });
@@ -678,7 +559,7 @@ module.exports = function (app) {
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8000/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
+     *   @example: http://192.168.30.77:8190/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
      */
 
     app.get('/users/:steamid', (req, res, next) => {
@@ -689,7 +570,7 @@ module.exports = function (app) {
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
-                logger("error", 'Users request by steamid', 500, "GET", getClientIp(req), req.user)
+
             } else {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
@@ -699,10 +580,10 @@ module.exports = function (app) {
 
                 if (result.length > 0) {
                     res.send(result);
-                    logger("info", 'Users request by steamid', 200, "GET", getClientIp(req), req.user)
+
                 } else {
                     res.send({404: "Nessun utente trovato"});
-                    logger("info", 'Users request by steamid', 404, "GET", getClientIp(req), req.user)
+
                 }
             }
         });

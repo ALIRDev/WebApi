@@ -3,7 +3,7 @@
 Verifica di stato del sistema, se online la risposta è ok: Sistema Online!
 
 ```
-http://192.168.30.77:8000/status
+http://192.168.30.77:8190/status
 ```
 
 ###### GET Players by playerid
@@ -11,7 +11,7 @@ http://192.168.30.77:8000/status
 Richiedo un giocatore tramite il suo playerid.
 
 ```
-http://192.168.30.77:8000/players/76561197960737527
+http://192.168.30.77:8190/players/76561197960737527
 ```
 
 ###### GET Players by name
@@ -19,14 +19,14 @@ http://192.168.30.77:8000/players/76561197960737527
 Richiedo un giocatore tramite il suo nome.
 
 ```
-http://192.168.30.77:8000/players/name/Mat
+http://192.168.30.77:8190/players/name/Mat
 ```
 ###### GET Vehicles by pid
 
 Richiedo i veicoli di un determinato pid.
 
 ```
-http://192.168.30.77:8000/vehicles/76561197960737527
+http://192.168.30.77:8190/vehicles/76561197960737527
 ```
 
 ###### GET Gangs by members
@@ -34,7 +34,7 @@ http://192.168.30.77:8000/vehicles/76561197960737527
 Richiedo il nome della gang avendo l'id di uno dei suoi members.
 
 ```
-http://192.168.30.77:8000/gangs/id/76561198037236088
+http://192.168.30.77:8190/gangs/id/76561198037236088
 ```
 
 ###### GET Gangs by name
@@ -42,7 +42,7 @@ http://192.168.30.77:8000/gangs/id/76561198037236088
 Richiedo una gang avendo il nome.
 
 ```
-http://192.168.30.77:8000/gangs/Wild
+http://192.168.30.77:8190/gangs/Wild
 ```
 
 ###### GET Wanted by wantedid 
@@ -50,7 +50,7 @@ http://192.168.30.77:8000/gangs/Wild
 Richiedo i capi d'accusa di un'utente dal suo playerid.
 
 ```
-http://192.168.30.77:8000/wanted/76561197960737527
+http://192.168.30.77:8190/wanted/76561197960737527
 ```
 
 ###### GET Users by steamId
@@ -58,7 +58,7 @@ http://192.168.30.77:8000/wanted/76561197960737527
 Richiedo un'utente del forum tramite il suo steamId.
 
 ```
-http://192.168.30.77:8000/users/76561198037236088
+http://192.168.30.77:8190/users/76561198037236088
 ```
 
 ###### GET Lists med
@@ -66,7 +66,7 @@ http://192.168.30.77:8000/users/76561198037236088
 Richiedo l'elenco dei medici al server.
 
 ```
-http://192.168.30.77:8000/lists/med
+http://192.168.30.77:8190/lists/med
 ```
 
 ###### GET Lists cop
@@ -74,7 +74,7 @@ http://192.168.30.77:8000/lists/med
 Richiedo l'elenco cop al server.
 
 ```
-http://192.168.30.77:8000/lists/cop
+http://192.168.30.77:8190/lists/cop
 ```
 
 ###### GET Server data
@@ -82,7 +82,7 @@ http://192.168.30.77:8000/lists/cop
 Richiedo i dati di up time al server di arma.
 
 ```
-http://192.168.30.77:8000/server/data
+http://192.168.30.77:8190/server/data
 ```
 
 ###### GET Donation list lv 1
@@ -90,7 +90,7 @@ http://192.168.30.77:8000/server/data
 Richiedo la lista donatori liv 1.
 
 ```
-http://192.168.30.77:8000/lists/donor/1
+http://192.168.30.77:8190/lists/donor/1
 ```
 
 ###### GET Donation list lv 2
@@ -98,7 +98,7 @@ http://192.168.30.77:8000/lists/donor/1
 Richiedo la lista donatori liv 2.
 
 ```
-http://192.168.30.77:8000/lists/donor/2
+http://192.168.30.77:8190/lists/donor/2
 ```
 
 ###### GET Donation stat
@@ -106,5 +106,5 @@ http://192.168.30.77:8000/lists/donor/2
 Richiedo le statistiche sui donatori.
 
 ```
-http://192.168.30.77:8000/donor/stat
+http://192.168.30.77:8190/donor/stat
 ```
