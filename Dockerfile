@@ -14,4 +14,6 @@ COPY . /usr/src/app
 
 EXPOSE 8190
 
+EXPOSE 8191
+
 CMD npm start

@@ -18,15 +18,15 @@ const HOST           = ip.address();
 
 /* ---------------------------------- */
 
-const key = fs.readFileSync('/home/andreacw/webapi/key/server.key');
-const cert = fs.readFileSync( '/home/andreacw/webapi/key/server.crt' );
-const ca = fs.readFileSync( '/home/andreacw/webapi/key/ca.crt' );
+//const key = fs.readFileSync('/home/andreacw/webapi/key/server.key');
+//const cert = fs.readFileSync( '/home/andreacw/webapi/key/server.crt' );
+//const ca = fs.readFileSync( '/home/andreacw/webapi/key/ca.crt' );
 
-const options = {
+/*const options = {
     key: key,
     cert: cert,
     ca: ca
-};
+};*/
 
 app.listen(port, HOST);
 
@@ -41,6 +41,8 @@ const basic = auth.basic({
         file: "./htpasswd/user.htpasswd"
     }
 );
+
+//https.createServer(options, app).listen(8191);
 
 const corsOptions = {
     "origin": "*",
@@ -81,5 +83,3 @@ donations(app);
 users(app);
 // Richieste di Steam e di Arma3Servers
 steam(app);
-
-https.createServer(options, app).listen(8191);
