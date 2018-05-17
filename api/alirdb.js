@@ -3,7 +3,7 @@ const jsonQuery      = require('json-query');
 const request        = require('request');
 
 // Path file-system
-const playersJson           = "/webapi/today/player.json";
+const playersJson           = "/home/andreacw/webapi/today/player.json";
 const gangsJson             = "/home/andreacw/webapi/today/gangs.json";
 const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
 const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
@@ -67,17 +67,18 @@ module.exports = function (app) {
     });
 
     /**
-     *   GET Players by playerid
+     *   GET Players find
      *   @param: req = Url della richiesta
      *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8190/players/76561197960737527 --> [{playerid: "76561197960737527", ....}]
+     *   @example: http://37.59.102.107:8190/players/find/76561198037236088 --> [{playerid: "76561197960737527", ....}]
+     *   @example: http://37.59.102.107:8190/players/find/Cola --> [{name: "Bob", ....}]
      */
 
-    app.get('/players/:playerid', (req, res, next) => {
+    app.get('/players/find/:searchValue', (req, res, next) => {
 
         // Prendo il pid dalla richiesta
-        const playerid = req.params.playerid;
+        const searchValue = req.params.searchValue;
 
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -87,55 +88,24 @@ module.exports = function (app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*playerid~/^' + playerid + '/i]', {
-                    data: obj,
-                    allowRegexp: true
-                }).value;
-                // Lancio il risultato
 
-                if (result.length > 0) {
-                    res.send(result);
+                let result;
 
-                } else {
-                    res.send({404: "Nessun giocatore trovato"});
-
+                if(isNaN(searchValue)){
+                    console.log(searchValue);
+                    result = jsonQuery('rows[**][*name~/' + searchValue + '/i]', {data: obj, allowRegexp: true}).value;
+                }else{
+                    console.log(searchValue);
+                     result = jsonQuery('rows[**][*playerid~/^' + searchValue + '/i]', {data: obj, allowRegexp: true}).value;
                 }
-            }
-        });
-    });
 
-    /**
-     *   GET Players by name
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
-     *   @return: Array di oggetti
-     *   @example: http://192.168.30.77:8190/players/name/Fake --> [{name: "Fake", ....}]
-     */
-
-    app.get('/players/name/:name', (req, res, next) => {
-
-        // Prendo il pid dalla richiesta
-        const name = req.params.name;
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-                res.send({500: 'Errore durante la richiesta'});
-
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*name~/' + name + '/i]', {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
 
                 if (result.length > 0) {
                     res.send(result);
 
-
                 } else {
                     res.send({404: "Nessun giocatore trovato"});
-
 
                 }
             }
