@@ -32,87 +32,9 @@ module.exports = function (app) {
         let options = { timeZone: "Europe/Rome", day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'};
         let formatter = new Intl.DateTimeFormat([], options);
 
-        let playerTotalValue;
-        let vehicleTotalValue;
-        let wantedTotalValue;
-        let gangTotalValue;
-
-
-        fs.readFile(playersJson, fileEncrypt, function (err, data) {
-            if (err) {
-
-                playerTotalValue = 0
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][]', {data: obj}).value;
-                // Lancio il risultato
-
-                playerTotalValue = result.length;
-
-            }
-        });
-
-        fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
-            if (err) {
-
-                vehicleTotalValue = 0
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][]', {data: obj}).value;
-                // Lancio il risultato
-
-                vehicleTotalValue = result.length;
-
-            }
-        });
-
-        fs.readFile(wantedJson, fileEncrypt, function (err, data) {
-            if (err) {
-
-                wantedTotalValue = 0
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][]', {data: obj}).value;
-                // Lancio il risultato
-
-                wantedTotalValue = result.length;
-
-            }
-        });
-
-        fs.readFile(gangsJson, fileEncrypt, function (err, data) {
-            if (err) {
-
-                gangTotalValue = 0
-
-            } else {
-                // Parse del JSON locale
-                let obj = JSON.parse(data);
-                // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][]', {data: obj}).value;
-                // Lancio il risultato
-
-                gangTotalValue = result.length;
-
-            }
-        });
-
         res.send({
            "Stato" : "Online",
-           "Ultimo aggiornamento" : formatter.format(new Date(UTCTime)),
-            "playerLenght" : playerTotalValue,
-            "vehicleLenght" : vehicleTotalValue,
-            "wantedLenght" : wantedTotalValue,
-            "gangLenght" : gangTotalValue
+           "Ultimo aggiornamento" : formatter.format(new Date(UTCTime))
         })
     });
 
