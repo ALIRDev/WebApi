@@ -8,6 +8,8 @@ const gangsJson             = "/home/andreacw/webapi/today/gangs.json";
 const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
 const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
 const usersJson             = "/home/andreacw/webapi/today/users.json";
+const discussioniJson       = "/home/andreacw/webapi/discussioni.json";
+const annunciJson           = "/home/andreacw/webapi/annunci.json";
 const fileEncrypt           = "utf8";
 
 module.exports = function (app) {
@@ -20,12 +22,13 @@ module.exports = function (app) {
 
     app.get('/rssFeed/discussioni', (req, res, next) => {
 
-        fs.readFile('/home/andreacw/webapi/discussioni.json', fileEncrypt, function (err, data) {
+        fs.readFile(discussioniJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
             } else {
-                res.send(data);
+                let obj = JSON.parse(data);
+                res.send(obj);
             }
         });
 
@@ -33,12 +36,13 @@ module.exports = function (app) {
 
     app.get('/rssFeed/annunci', (req, res, next) => {
 
-        fs.readFile('/home/andreacw/webapi/annunci.json', fileEncrypt, function (err, data) {
+        fs.readFile(annunciJson, fileEncrypt, function (err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
             } else {
-                res.send(data);
+                let obj = JSON.parse(data);
+                res.send(obj);
             }
         });
     });
