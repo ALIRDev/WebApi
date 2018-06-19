@@ -92,7 +92,7 @@ const job = new CronJob('*/5 * * * *', function() {
             fs.writeFile('/home/andreacw/webapi/annunci.json', rss, 'utf8')
         });
 
-        console.error("Aggiornamento RSS Feed completo")
+        console.info("Aggiornamento RSS Feed completo")
 
     }, function () {
         console.error("CRON disattivo.")
