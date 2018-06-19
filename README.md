@@ -20,6 +20,10 @@ Rotte esposte dall'app Node.js ALIRWebApi, richiesta BasicAuth dalla versione do
 
 È possibile trovare tutte le informazioni sulle request per Steam [qui](docs/SteamRequest.md)
 
+#### Richieste RssFeed
+
+È possibile trovare tutte le informazioni sulle request per RssFeed [qui](docs/FeedNews.md)
+
 ## Basic Auth
 
 Per tutte le richieste a partire dalla versione Web Api 2
