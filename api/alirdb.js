@@ -1,7 +1,6 @@
 const fs             = require("file-system");
 const jsonQuery      = require('json-query');
 const request        = require('request');
-const Feed = require('rss-to-json');
 
 // Path file-system
 const playersJson           = "/home/andreacw/webapi/today/player.json";
@@ -10,7 +9,6 @@ const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
 const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
 const usersJson             = "/home/andreacw/webapi/today/users.json";
 const fileEncrypt           = "utf8";
-const key                   = "01f5ac2969949545e480ece0ac98ba12";
 
 module.exports = function (app) {
 
@@ -22,18 +20,27 @@ module.exports = function (app) {
 
     app.get('/rssFeed/discussioni', (req, res, next) => {
 
-        Feed.load('https://www.alir.eu/rss/1-rss-discussioni.xml/?member_id=3634&key=' + key, function (err, rss) {
-            res.send(rss);
+        fs.readFile('/home/andreacw/webapi/discussioni.json', fileEncrypt, function (err, data) {
+            if (err) {
+                res.send({500: 'Errore durante la richiesta'});
+
+            } else {
+                res.send(data);
+            }
         });
 
     });
 
     app.get('/rssFeed/annunci', (req, res, next) => {
 
-        Feed.load('https://www.alir.eu/rss/3-annunci.xml/?member_id=3634&key=' + key, function (err, rss) {
-            res.send(rss);
-        });
+        fs.readFile('/home/andreacw/webapi/annunci.json', fileEncrypt, function (err, data) {
+            if (err) {
+                res.send({500: 'Errore durante la richiesta'});
 
+            } else {
+                res.send(data);
+            }
+        });
     });
 
     /**
