@@ -1,5 +1,7 @@
 # ALIRAPI
 
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi?ref=badge_shield)
+
 ## Introduzione
 
 AlirAPI è un'applicativo node.js, che espone delle api sulla porta 8190 di seguito l'elenco:
@@ -49,3 +51,7 @@ $.ajax({
 });
 
 ```
+
+### License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi?ref=badge_large)
