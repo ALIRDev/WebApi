@@ -1,9 +1,14 @@
 const express        = require("express");
 const ip             = require("ip");
 const app            = express();
-const alirdb         = require("./api/alirdb");
-const steam          = require("./api/steam");
-const donations      = require("./api/donations");
+const generic         = require("./api/alirdb/generic");
+const players         = require("./api/alirdb/players");
+const users         = require("./api/alirdb/users");
+const vehicle         = require("./api/alirdb/vehicle");
+const wanted         = require("./api/alirdb/wanted");
+const gangs         = require("./api/alirdb/gangs");
+const steam          = require("./api/steam/steam");
+const donations      = require("./api/donations/donations");
 const auth           = require("http-auth");
 const morgan         = require("morgan");
 const cors           = require("cors");
@@ -113,8 +118,13 @@ const job = new CronJob('*/15 * * * *', function() {
 
 job.start();
 
-// Richieste alirdb
-alirdb(app);
+// Richieste ALIRDB
+generic(app);
+players(app);
+gangs(app);
+vehicle(app);
+wanted(app);
+users(app);
 // Richieste donazioni
 donations(app);
 // Richieste di Steam e di Arma3Servers
