@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:8
 
 LABEL maintainer = "Andrea Zago <zago.lux.2011@gmail.com>"
 

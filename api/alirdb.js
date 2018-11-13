@@ -30,8 +30,8 @@ module.exports = function (app) {
 
     const keyA3S = "bcdzrsb2sy4nfdpb3w9g2fk7f5kqre04c2k";
 
-    app.get('/server/data', function(req, res, next) {
-        let url = 'https://arma3-servers.net/api/?object=servers&element=detail&key=' + keyA3S;
+    app.get("/server/data", function(req, res, next) {
+        let url = "https://arma3-servers.net/api/?object=servers&element=detail&key=" + keyA3S;
         request.get(url, function(error, httpResponse, httpBody) {
             res.setHeader('Content-Type', 'application/json');
             res.send(httpBody);
@@ -44,7 +44,7 @@ module.exports = function (app) {
      *   -------------------------------------------------
      */
 
-    app.get('/rssFeed/discussioni', (req, res, next) => {
+    app.get("/rssFeed/discussioni", (req, res, next) => {
 
         fs.readFile(discussioniJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -58,7 +58,7 @@ module.exports = function (app) {
 
     });
 
-    app.get('/rssFeed/annunci', (req, res, next) => {
+    app.get("/rssFeed/annunci", (req, res, next) => {
 
         fs.readFile(annunciJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -85,7 +85,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/status --> {"Stato":"Online","Ultimo aggiornamento":"2018-5-15 11:56"}
      */
 
-    app.get('/status', (req, res, next) => {
+    app.get("/status", (req, res, next) => {
         let stats = fs.statSync(playersJson);
         let UTCTime = stats.ctime;
         let options = { timeZone: "Europe/Rome", day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'};
@@ -105,7 +105,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/players/lenght --> [{56}]
      */
 
-    app.get('/players/lenght/', (req, res, next) => {
+    app.get("/players/lenght/", (req, res, next) => {
 
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -134,7 +134,7 @@ module.exports = function (app) {
      *   @example: http://37.59.102.107:8190/players/find/Cola --> [{name: "Bob", ....}]
      */
 
-    app.get('/players/find/:searchValue', (req, res, next) => {
+    app.get("/players/find/:searchValue", (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const searchValue = req.params.searchValue;
@@ -179,7 +179,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/players/lists/100 --> [{....}]
      */
 
-    app.get('/players/lists/:size', (req, res, next) => {
+    app.get("/players/lists/:size", (req, res, next) => {
 
         const size = req.params.size;
 
@@ -211,7 +211,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/vehicles/lenght --> [{56}]
      */
 
-    app.get('/vehicles/lenght/', (req, res, next) => {
+    app.get("/vehicles/lenght/", (req, res, next) => {
 
         fs.readFile(vehiclesJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -240,7 +240,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/vehicles/76561197960737527 --> [{pid: "76561197960737527", ....}]
      */
 
-    app.get('/vehicles/:pid', (req, res, next) => {
+    app.get("/vehicles/:pid", (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const pid = req.params.pid;
@@ -280,7 +280,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/wanted/lenght --> [{56}]
      */
 
-    app.get('/wanted/lenght/', (req, res, next) => {
+    app.get("/wanted/lenght/", (req, res, next) => {
 
         fs.readFile(wantedJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -309,7 +309,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
      */
 
-    app.get('/wanted/:wantedID', (req, res, next) => {
+    app.get("/wanted/:wantedID", (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const wantedID = req.params.wantedID;
@@ -346,7 +346,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/gangs/lenght --> [{56}]
      */
 
-    app.get('/gangs/lenght/', (req, res, next) => {
+    app.get("/gangs/lenght/", (req, res, next) => {
 
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -376,7 +376,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/gangs --> [{..},{..}]
      */
 
-    app.get('/gangs/', (req, res, next) => {
+    app.get("/gangs/", (req, res, next) => {
 
         fs.readFile(gangsJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -413,7 +413,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/gangs/Mano --> [{name: "Mano nera", ....}]
      */
 
-    app.get('/gangs/:name', (req, res, next) => {
+    app.get("/gangs/:name", (req, res, next) => {
 
         // Prendo il nome dalla richiesta
         const gangName = req.params.name;
@@ -450,7 +450,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
      */
 
-    app.get('/gangs/id/:playerid', (req, res, next) => {
+    app.get("/gangs/id/:playerid", (req, res, next) => {
 
         // Prendo il nome dalla richiesta
         const playerid = req.params.playerid;
@@ -502,7 +502,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/users/lenght --> [{56}]
      */
 
-    app.get('/users/lenght/', (req, res, next) => {
+    app.get("/users/lenght/", (req, res, next) => {
 
         fs.readFile(usersJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -532,7 +532,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/users/id/3 --> [{id: "3", ....}]
      */
 
-    app.get('/users/id/:id', (req, res, next) => {
+    app.get("/users/id/:id", (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const id = req.params.id;
@@ -566,7 +566,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/lists/cop --> [{coplevel: "3", ....}]
      */
 
-    app.get('/lists/cop/', (req, res, next) => {
+    app.get("/lists/cop/", (req, res, next) => {
 
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -593,7 +593,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/lists/med --> [{mediclevel: "3", ....}]
      */
 
-    app.get('/lists/med/', (req, res, next) => {
+    app.get("/lists/med/", (req, res, next) => {
 
         fs.readFile(playersJson, fileEncrypt, function (err, data) {
             if (err) {
@@ -621,7 +621,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
      */
 
-    app.get('/users/:steamid', (req, res, next) => {
+    app.get("/users/:steamid", (req, res, next) => {
 
         // Prendo il pid dalla richiesta
         const steamid = req.params.steamid;

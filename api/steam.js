@@ -21,7 +21,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/steam/game/292030/achievements --> [{games: "...."}]
      */
 
-    app.get('/steam/game/:appid/achievements', function(req, res, next) {
+    app.get("/steam/game/:appid/achievements", function(req, res, next) {
         let url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key='+ steamK +'&appid=' + req.params.appid;
         request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
@@ -37,7 +37,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
 
-    app.get('/steam/users/:steamid/data', function(req, res, next) {
+    app.get("/steam/users/:steamid/data", function(req, res, next) {
         let url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='+ steamK +'&steamids=' + req.params.steamid;
         request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
@@ -53,7 +53,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
 
-    app.get('/steam/users/:steamid/ban', function(req, res, next) {
+    app.get("/steam/users/:steamid/ban", function(req, res, next) {
         let url = 'http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key='+ steamK +'&steamids=' + req.params.steamid;
         request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');
@@ -69,7 +69,7 @@ module.exports = function (app) {
      *   @example: http://192.168.30.77:8190/steam/arma/news --> [{"...."}]
      */
 
-    app.get('/steam/arma/news', function(req, res, next) {
+    app.get("/steam/arma/news", function(req, res, next) {
         let url = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=107410&count=10&maxlength=300&format=json';
         request.get(url, function(error, steamHttpResponse, steamHttpBody) {
             res.setHeader('Content-Type', 'application/json');

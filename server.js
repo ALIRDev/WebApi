@@ -1,18 +1,16 @@
-const express        = require('express');
+const express        = require("express");
 const ip             = require("ip");
 const app            = express();
-const alirdb         = require('./api/alirdb');
-const users          = require('./api/users');
-const steam          = require('./api/steam');
-const donations      = require('./api/donations');
-const auth           = require('http-auth');
-const morgan         = require('morgan');
-const cors           = require('cors');
-const https          = require('https');
+const alirdb         = require("./api/alirdb");
+const steam          = require("./api/steam");
+const donations      = require("./api/donations");
+const auth           = require("http-auth");
+const morgan         = require("morgan");
+const cors           = require("cors");
+//const https          = require("https");
 const fs             = require("fs");
-const Feed = require('rss-to-json');
-
-const CronJob = require('cron').CronJob;
+const Feed           = require("rss-to-json");
+const CronJob        = require("cron").CronJob;
 
 /* ---------------------------------- */
 
@@ -81,10 +79,12 @@ basic.on('error', (error, req) => {
 const job = new CronJob('*/15 * * * *', function() {
 
         const key = "01f5ac2969949545e480ece0ac98ba12";
+        const rss_discussion = "https://www.alir.eu/rss/1-rss-discussioni.xml/";
+        const rss_news = "https://www.alir.eu/rss/3-annunci.xml/";
         const discussioniJson       = "/home/andreacw/webapi/discussioni.json";
         const annunciJson           = "/home/andreacw/webapi/annunci.json";
 
-        Feed.load('https://www.alir.eu/rss/1-rss-discussioni.xml/?member_id=3634&key=' + key, function (err, rss) {
+        Feed.load( rss_discussion + "/?member_id=3634&key=" + key, function (err, rss) {
             let json = JSON.stringify(rss);
             if (err){
                 console.log(err);
@@ -93,7 +93,7 @@ const job = new CronJob('*/15 * * * *', function() {
             }
         });
 
-        Feed.load('https://www.alir.eu/rss/3-annunci.xml/?member_id=3634&key=' + key, function (err, rss) {
+        Feed.load( rss_news + "/?member_id=3634&key=" + key, function (err, rss) {
             let json = JSON.stringify(rss);
             if (err){
                 console.log(err);
@@ -102,13 +102,13 @@ const job = new CronJob('*/15 * * * *', function() {
             }
         });
 
-        console.info("Aggiornamento RSS Feed completo!")
+        console.info("Updated RSS Feed completed!")
 
     }, function () {
-        console.error("CRON disattivo.")
+        console.error("Error: CRON disabled.")
     },
     true,
-    'America/Los_Angeles'
+    "America/Los_Angeles"
 );
 
 job.start();
@@ -117,7 +117,5 @@ job.start();
 alirdb(app);
 // Richieste donazioni
 donations(app);
-// Utenze ipb
-users(app);
 // Richieste di Steam e di Arma3Servers
 steam(app);
