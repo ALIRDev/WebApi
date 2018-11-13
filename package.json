@@ -2,7 +2,7 @@
   "name": "alirapi",
   "version": "1.0.0",
   "description": "",
-  "author": "Andrea Zago <zago.lux.2011@gmail.com>",
+  "author": "Andrea Zago <andreacw5@live.com>",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js"
@@ -16,14 +16,15 @@
     "express": "^4.16.4",
     "file-system": "^2.2.2",
     "http-auth": "^3.2.3",
-    "https": "^1.0.0",
     "ip": "^1.1.5",
     "json-query": "^2.2.2",
     "morgan": "^1.9.1",
     "node-cron": "^1.2.1",
     "request": "^2.88.0",
     "rss-to-json": "^1.0.4",
-    "winston": "^2.4.4"
+    "winston": "^2.4.4",
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0"
   },
   "license": "MIT"
 }
