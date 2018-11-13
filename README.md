@@ -1,4 +1,6 @@
 # ALIRAPI
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi?ref=badge_shield)
+
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae27cc41a3c84d939ead417373cdd573)](https://app.codacy.com/app/andreacw5/ALIRWebApi?utm_source=github.com&utm_medium=referral&utm_content=andreacw5/ALIRWebApi&utm_campaign=Badge_Grade_Settings)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi?ref=badge_shield)
