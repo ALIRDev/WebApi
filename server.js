@@ -3,6 +3,7 @@ const ip             = require("ip");
 const app            = express();
 const generic         = require("./api/alirdb/generic");
 const players         = require("./api/alirdb/players");
+const lists         = require("./api/alirdb/list");
 const users         = require("./api/alirdb/users");
 const vehicle         = require("./api/alirdb/vehicle");
 const wanted         = require("./api/alirdb/wanted");
@@ -124,6 +125,7 @@ players(app);
 gangs(app);
 vehicle(app);
 wanted(app);
+lists(app);
 users(app);
 // Richieste donazioni
 donations(app);

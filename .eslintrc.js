@@ -7,7 +7,6 @@ module.exports = {
     "rules": {
         "comma-dangle": 0,
         "consistent-return": 0,
-        "function-paren-newline": ["error", "never"],
         "implicit-arrow-linebreak": ["off"],
         "no-param-reassign": 0,
         "no-underscore-dangle": 0,
@@ -21,6 +20,7 @@ module.exports = {
         "no-unused-expressions": 0,
         "max-len": 1,
         "require-jsdoc": 1,
-        "new-cap" : 1
+        "new-cap" : 1,
+        "function-paren-newline": 1
     }
 };

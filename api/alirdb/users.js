@@ -1,8 +1,8 @@
-const fs             = require("file-system");
-const jsonQuery      = require('json-query');
+const fs = require("file-system");
+const jsonQuery = require('json-query');
 
-const usersJson             = "/home/andreacw/webapi/today/users.json";
-const fileEncrypt           = "utf8";
+const usersJson = "/home/andreacw/webapi/today/users.json";
+const fileEncrypt = "utf8";
 
 module.exports = function (app) {
 
