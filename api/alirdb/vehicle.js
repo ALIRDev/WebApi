@@ -1,10 +1,10 @@
-const fs             = require("file-system");
-const jsonQuery      = require('json-query');
+const fs = require("file-system");
+const jsonQuery = require('json-query');
 
-const vehiclesJson          = "/home/andreacw/webapi/today/vehicles.json";
-const fileEncrypt           = "utf8";
+const vehiclesJson = "/home/andreacw/webapi/today/vehicles.json";
+const fileEncrypt = "utf8";
 
-module.exports = function (app) {
+module.exports = function(app) {
 
     /**
      *   GET Vehicle lenght

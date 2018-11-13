@@ -46,7 +46,7 @@ module.exports = function (app) {
 
     app.get("/gangs/", (req, res, next) => {
 
-        fs.readFile(gangsJson, fileEncrypt, function (err, data) {
+        fs.readFile(gangsJson, fileEncrypt, function(err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
@@ -67,7 +67,6 @@ module.exports = function (app) {
 
                 res.send(array);
 
-
             }
         });
 
@@ -86,7 +85,7 @@ module.exports = function (app) {
         // Prendo il nome dalla richiesta
         const gangName = req.params.name;
 
-        fs.readFile(gangsJson, fileEncrypt, function (err, data) {
+        fs.readFile(gangsJson, fileEncrypt, function(err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
@@ -94,7 +93,8 @@ module.exports = function (app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][*name~/^' + gangName + '/i]', {data: obj, allowRegexp: true}).value;
+                let result = jsonQuery('rows[**][*name~/^' + gangName + '/i]',
+                    {data: obj, allowRegexp: true}).value;
                 // Lancio il risultato
 
                 if (result.length > 0) {
@@ -123,7 +123,7 @@ module.exports = function (app) {
         // Prendo il nome dalla richiesta
         const playerid = req.params.playerid;
 
-        fs.readFile(gangsJson, fileEncrypt, function (err, data) {
+        fs.readFile(gangsJson, fileEncrypt, function(err, data) {
             if (err) {
                 res.send({500: 'Errore durante la richiesta'});
 
@@ -131,7 +131,8 @@ module.exports = function (app) {
                 // Parse del JSON locale
                 let obj = JSON.parse(data);
                 // Regex di ricerca per nome
-                let result = jsonQuery('rows[**][]', {data: obj, allowRegexp: false}).value;
+                let result = jsonQuery('rows[**][]',
+                    {data: obj, allowRegexp: false}).value;
                 // Lancio il risultato
 
                 let finalName;

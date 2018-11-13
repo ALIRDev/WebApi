@@ -1,10 +1,10 @@
-const fs             = require("file-system");
-const jsonQuery      = require('json-query');
+const fs = require("file-system");
+const jsonQuery = require('json-query');
 
-const wantedJson            = "/home/andreacw/webapi/today/wanted.json";
-const fileEncrypt           = "utf8";
+const wantedJson = "/home/andreacw/webapi/today/wanted.json";
+const fileEncrypt = "utf8";
 
-module.exports = function (app) {
+module.exports = function(app) {
 
     /**
      *   GET Wanted lenght
