@@ -1,0 +1,11 @@
+engines:
+  # ... CONFIG CONTENT ...
+  eslint:
+    enabled: true
+    # ... CONFIG CONTENT ...
+    checks:
+      padded-blocks:
+        enabled: false
+      function-paren-newline:
+        enabled: false
+# ... CONFIG CONTENT ...
