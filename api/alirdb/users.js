@@ -8,8 +8,6 @@ module.exports = function (app) {
 
     /**
      *   GET Users by pid
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/users/76561198037236088 --> [{steamid: "76561198037236088", ....}]
      */
@@ -43,8 +41,6 @@ module.exports = function (app) {
 
     /**
      *   GET Users lenght
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/users/lenght --> [{56}]
      */
@@ -73,8 +69,6 @@ module.exports = function (app) {
 
     /**
      *   GET Users by id
-     *   @param: req = Url della richiestagithj
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/users/id/3 --> [{id: "3", ....}]
      */

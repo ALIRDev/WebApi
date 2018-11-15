@@ -8,7 +8,6 @@ module.exports = function(app) {
 
     /**
      *   GET List by cop
-     *   @param: req = Url della richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/lists/cop --> [{coplevel: "3", ....}]
      */
@@ -35,7 +34,6 @@ module.exports = function(app) {
 
     /**
      *   GET List by med
-     *   @param: req = Url della richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/lists/med --> [{mediclevel: "3", ....}]
      */
