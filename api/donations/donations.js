@@ -9,7 +9,6 @@ module.exports = function (app) {
 
     /**
      *   GET List by donor !=1
-     *   @param: req = Url della richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/lists/donor/1 --> [{....}]
      */
@@ -36,7 +35,6 @@ module.exports = function (app) {
 
     /**
      *   GET List by donor !=2
-     *   @param: req = Url della richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/lists/donor/2 --> [{....}]
      */
@@ -63,7 +61,6 @@ module.exports = function (app) {
 
     /**
      *   GET Donor stats
-     *   @param: req = Url della richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/donor/stats --> [{"onelev": int,"twolev": int}]
      */

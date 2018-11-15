@@ -8,8 +8,6 @@ module.exports = function(app) {
 
     /**
      *   GET Players lenght
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/players/lenght --> [{56}]
      */
@@ -36,8 +34,6 @@ module.exports = function(app) {
 
     /**
      *   GET Players find
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://37.59.102.107:8190/players/find/76561198037236088 --> [{playerid: "76561197960737527", ....}]
      *   @example: http://37.59.102.107:8190/players/find/Cola --> [{name: "Bob", ....}]
@@ -82,8 +78,6 @@ module.exports = function(app) {
 
     /**
      *   GET Players list
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/players/lists/100 --> [{....}]
      */

@@ -5,18 +5,10 @@ const request        = require('request');
 
 module.exports = function (app) {
 
-    /**
-     *   -------------------------------------------------
-     *                 RICHIESTE STEAM
-     *   -------------------------------------------------
-     */
-
     const steamK = "7FC5C2ACE4CA1A33929ABAD8F5843B59";
 
     /**
      *   GET games achievements (Ottengo l'elenco dei trofei per un determinato gioco)
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/steam/game/292030/achievements --> [{games: "...."}]
      */
@@ -31,8 +23,6 @@ module.exports = function (app) {
 
     /**
      *   GET user steam data
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
@@ -47,8 +37,6 @@ module.exports = function (app) {
 
     /**
      *   GET user steam data
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/steam/users/76561197960435530/data --> [{"...."}]
      */
@@ -63,8 +51,6 @@ module.exports = function (app) {
 
     /**
      *   GET Arma 3 info
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/steam/arma/news --> [{"...."}]
      */

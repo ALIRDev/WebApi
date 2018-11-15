@@ -8,8 +8,6 @@ module.exports = function(app) {
 
     /**
      *   GET Wanted lenght
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/wanted/lenght --> [{56}]
      */
@@ -37,8 +35,6 @@ module.exports = function(app) {
 
     /**
      *   GET Wanted by wantedID
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/wanted/76561197960737527 --> [{wantedID: "76561197960737527", ....}]
      */

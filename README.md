@@ -3,6 +3,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/f86e5d82069e0dd07738/test_coverage)](https://codeclimate.com/github/andreacw5/ALIRWebApi/test_coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ae27cc41a3c84d939ead417373cdd573)](https://app.codacy.com/app/andreacw5/ALIRWebApi?utm_source=github.com&utm_medium=referral&utm_content=andreacw5/ALIRWebApi&utm_campaign=Badge_Grade_Settings)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fandreacw5%2FALIRWebApi?ref=badge_shield)
+[![Known Vulnerabilities](https://snyk.io/test/github/andreacw5/ALIRWebApi/badge.svg?targetFile=package.json)](https://snyk.io/test/github/andreacw5/ALIRWebApi?targetFile=package.json)
 
 ## Introduzione
 

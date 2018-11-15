@@ -8,8 +8,6 @@ module.exports = function (app) {
 
     /**
      *   GET Gangs lenght
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/gangs/lenght --> [{56}]
      */
@@ -38,8 +36,6 @@ module.exports = function (app) {
 
     /**
      *   GET All Gangs (LIMITER 75)
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/gangs --> [{..},{..}]
      */
@@ -74,8 +70,6 @@ module.exports = function (app) {
 
     /**
      *   GET Gangs by name
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/gangs/Mano --> [{name: "Mano nera", ....}]
      */
@@ -112,8 +106,6 @@ module.exports = function (app) {
 
     /**
      *   GET Gangs by pid
-     *   @param: req = Url della richiesta
-     *   @param: res = Risposta alla richiesta
      *   @return: Array di oggetti
      *   @example: http://192.168.30.77:8190/gangs/id/76561197960737527 --> [{name: "Mano nera", ....}]
      */
