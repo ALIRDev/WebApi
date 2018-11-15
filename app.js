@@ -33,4 +33,6 @@ app.use('/wanted', wantedRouter);
 // Swagger documentation for Web API
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+console.log("File swagger pubblicato al link http://localhost:3000/swagger");
+
 module.exports = app;

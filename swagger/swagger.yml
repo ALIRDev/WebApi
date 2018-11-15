@@ -12,6 +12,33 @@ servers:
 - url: https://api.alir.eu
   description: Server remoto
 paths:
+  '/list':
+    get:
+      tags:
+      - General
+      parameters:
+      - name: side
+        in: query
+        schema:
+          type: string
+          enum: ["cop", "med"]
+        description: codice fazione
+      summary: Elenco dei giocatori  della fazione
+      description: Restitisce l'elenco dei giocatori della fazione
+      operationId: factionList
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Players'
+        404:
+          description: "Not found"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
   '/players':
     get:
       tags:
@@ -82,11 +109,68 @@ paths:
           description: "Not found"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+  '/gangs':
+    get:
+      tags:
+      - Gangs
+      summary: Elenco delle gang
+      description: Restitisce l'elenco delle gang
+      operationId: gangList
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gangs'
+        404:
+          description: "Not found"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  '/gangs/{gangId}':
+    get:
+      tags:
+      - Gangs
+      summary: Dettagli di una gang
+      description: Restitisce li dettagli di una gang
+      operationId: gangShow
+      parameters:
+      - name: gangId
+        in: path
+        schema:
+          type: string
+        description: Id della gang
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Gang'
+        404:
+          description: "Not found"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
 components:
   responses:
     UnauthorizedError:
       description: Authentication information is missing or invalid
   schemas:
+    Gangs:
+      type: object
+      properties:
+        pid:
+          type: integer
+          description: Identificativo univoco del giocatore steam
+    Gang:
+      type: object
+      properties:
+        pid:
+          type: integer
+          description: Identificativo univoco del giocatore steam
     Vehicles:
       type: object
       properties:
