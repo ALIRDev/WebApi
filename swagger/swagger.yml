@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: ALIR Web Api
+  description: 'Documentazione Api'
+  contact:
+    name: API Support
+    email: andreacw5@live.com
+  version: '1.0'
+servers:
+- url: http://localhost:3000
+  description: Server locale
+paths:
+  /players:
+    get:
+      tags:
+      - Players
+      summary: Elenco dei giocatori
+      description: Restitisce l'elenco dei giocatori
+      operationId: playerList
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Players'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+components:
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+  schemas:
+    Players:
+      type: object
+      properties:
+        uid:
+          type: integer
+          description: Identificativo univoco del giocatore sul database
+        playerid:
+          type: integer
+          maxLength: 17
+          description: Codice univoco del giocatore di steam
+        cash:
+          type: integer
+          description: Contanti dell'utente
+        bankacc:
+          type: integer
+          description: Denaro sul conto corrente dell'utente
+        name:
+          type: string
+          description: Nome dell'utente sul server
+        aliases:
+          type: string
+          description: Nomi dell'utente precedenti
+        coplevel:
+          type: integer
+          maximum: 11
+          description: Livello polizia del giocatore
+        mediclevel:
+          type: integer
+          maximum: 8
+          description: Livello medico del giocatore
+        adaclevel:
+          type: integer
+          maximum: 5
+          description: Livello meccanico del giocatore
+        adminlevel:
+          type: integer
+          maximum: 5
+          description: Livello amministratore del giocatore
+        insert_time:
+          type: string
+          format: date-time
+          description: Data di inserimento sul db
+        civ_licenses:
+          type: array
+          description: Licenze possedute
+      example:
+        uid: 1
+        playerid: 76561198036665850
+        cash: 245
+        bankacc: 23489
+        name: Bowen
+        aliases: Merez
+        coplevel: 3
+        mediclevel: 0
+        adaclevel: 0
+        adminlevel: 5
+        insert_time: 2018-11-01T17:46:33
+        civ_licenses: []
+tags:
+- name: Players
+  description: Api relative ai giocatori
+
