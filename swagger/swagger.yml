@@ -9,8 +9,10 @@ info:
 servers:
 - url: http://localhost:3000
   description: Server locale
+- url: https://api.alir.eu
+  description: Server remoto
 paths:
-  /players:
+  '/players':
     get:
       tags:
       - Players
@@ -26,6 +28,58 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Players'
+        404:
+          description: "Not found"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  '/players/{playerId}':
+    get:
+      tags:
+      - Players
+      summary: Elenco dei giocatori trovati
+      parameters:
+      - name: playerId
+        in: path
+        schema:
+          type: string
+        description: playerId del giocatore o nome del giocatore
+      description: Restitisce l'elenco dei giocatori trovati, può ritornare uno o più player in base al tipo di ricerca
+      operationId: playerSearch
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Players'
+        404:
+          description: "Not found"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  '/vehicles/{playerId}':
+    get:
+      tags:
+      - Vehicles
+      summary: Elenco dei veicoli di un giocatore
+      parameters:
+      - name: playerId
+        in: path
+        schema:
+          type: string
+        description: playerId del giocatore o nome del giocatore
+      description: Elenco dei veicoli di un giocatore
+      operationId: vehicleList
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicles'
+        404:
+          description: "Not found"
         401:
           $ref: '#/components/responses/UnauthorizedError'
 components:
@@ -33,6 +87,40 @@ components:
     UnauthorizedError:
       description: Authentication information is missing or invalid
   schemas:
+    Vehicles:
+      type: object
+      properties:
+        pid:
+          type: integer
+          description: Identificativo univoco del giocatore steam
+        classname:
+          type: string
+          description: Nome del veicolo
+        alive:
+          type: integer
+          description: Indica se il veicolo è attivo sul server
+        type:
+          type: string
+          enum: ["Car", "Air", "Boat"]
+          description: Tipologia del mezzo
+        side:
+          type: string
+          enum: ["civ", "cop", "med"]
+          description: Fazione del veicolo
+        color:
+          type: integer
+          description: Colore del veicolo
+        plate:
+          type: integer
+          description: Targa del veicolo
+      example:
+        pid: 234235436564
+        plate: 324
+        classname: "O_Truck_03_transport_F"
+        type: "Car"
+        side: "civ"
+        alive: 1
+        color: 0
     Players:
       type: object
       properties:
@@ -67,6 +155,7 @@ components:
           type: integer
           maximum: 5
           description: Livello meccanico del giocatore
+          deprecated: true
         adminlevel:
           type: integer
           maximum: 5
@@ -92,6 +181,15 @@ components:
         insert_time: 2018-11-01T17:46:33
         civ_licenses: []
 tags:
-- name: Players
-  description: Api relative ai giocatori
-
+  - name: Players
+    description: Api relative ai giocatori
+  - name: Vehicles
+    description: Api relative ai veicoli
+  - name: Gangs
+    description: Api relative alle gang
+  - name: Users
+    description: Api relative agli utenti del forum
+  - name: General
+    description: Api generiche
+  - name: Wanted
+    description: Api relative alla lista ricercati

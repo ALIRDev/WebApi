@@ -12,23 +12,7 @@ AlirAPI è un'applicativo node.js, che espone delle api sulla porta 8190 di segu
 
 ## Richieste
 
-Rotte esposte dall'app Node.js ALIRWebApi, richiesta BasicAuth dalla versione donor
-
-#### Richieste ALIRDB
-
-È possibile trovare tutte le informazioni sulle request per ALIRDB [qui](docs/ALIRDBRequest.md)
-
-#### Richieste MyALIR
-
-È possibile trovare tutte le informazioni sulle request per MyALIR [qui](docs/MyALIRequest.md)
-
-#### Richieste Steam
-
-È possibile trovare tutte le informazioni sulle request per Steam [qui](docs/SteamRequest.md)
-
-#### Richieste RssFeed
-
-È possibile trovare tutte le informazioni sulle request per RssFeed [qui](docs/FeedNews.md)
+Per informazioni consulta 
 
 ## Basic Auth
 
