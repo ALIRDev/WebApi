@@ -4,6 +4,8 @@ const request = require('request');
 
 const steamUrl = process.env.STEAM_URL;
 const steamKey = process.env.STEAM_KEY;
+const armaServerUrl = process.env.ARMA_SERVER_URL;
+const armaServerKey = process.env.ARMA_SERVER_KEY;
 
 /**
  *   GET index
@@ -63,6 +65,101 @@ router.get("/steam/arma/news", function(req, res, next) {
     request.get(url, function(error, steamHttpResponse, steamHttpBody) {
         res.setHeader('Content-Type', 'application/json');
         res.send(steamHttpBody);
+    });
+});
+
+/**
+ *   GET List by cop
+ *   @return: Array di oggetti
+ *   @example: http://192.168.30.77:8190/lists/cop --> [{coplevel: "3", ....}]
+ */
+
+router.get("/lists/cop/", (req, res, next) => {
+
+    fs.readFile(process.env.PLAYER_JSON, process.env.FILE_ENCRYPTION, function (err, data) {
+        if (err) {
+            res.send({500: 'Errore durante la richiesta'});
+
+        } else {
+            // Parse del JSON locale
+            let obj = JSON.parse(data);
+            let level = "5";
+            // Regex di ricerca per nome
+            let result = jsonQuery('rows[**][*coplevel!=0]', {data: obj, allowRegexp: false}).value;
+            // Lancio il risultato
+
+            res.send(result);
+
+        }
+    });
+});
+
+/**
+ *   GET List by med
+ *   @return: Array di oggetti
+ *   @example: http://192.168.30.77:8190/lists/med --> [{mediclevel: "3", ....}]
+ */
+
+router.get("/lists/med/", (req, res, next) => {
+
+    fs.readFile(process.env.PLAYER_JSON, process.env.FILE_ENCRYPTION, function (err, data) {
+        if (err) {
+            res.send({500: 'Errore durante la richiesta'});
+
+        } else {
+            // Parse del JSON locale
+            let obj = JSON.parse(data);
+            let level = "5";
+            // Regex di ricerca per nome
+            let result = jsonQuery('rows[**][*mediclevel!=0]', {data: obj, allowRegexp: false}).value;
+            // Lancio il risultato
+
+            res.send(result);
+
+        }
+    });
+});
+
+/**
+ *   GET Arma 3 server info
+ *   @return: Array di oggetti
+ *   @example: http://192.168.30.77:8000/server/data --> [{"...."}]
+ */
+
+router.get("/server/data", function(req, res, next) {
+    let url = armaServerUrl + "?object=servers&element=detail&key=" + armaServerKey;
+    request.get(url, function(error, httpResponse, httpBody) {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(httpBody);
+    });
+});
+
+// RICHIESTE RSS
+
+router.get("/rssFeed/discussioni", (req, res, next) => {
+
+    fs.readFile(process.env.DISCUSSION_JSON, process.env.FILE_ENCRYPTION, function(err, data) {
+        if (err) {
+            res.send({500: 'Errore durante la richiesta'});
+
+        } else {
+            let obj = JSON.parse(data);
+            res.send(obj);
+        }
+    });
+
+});
+
+router.get("/rssFeed/annunci", (req, res, next) => {
+
+    fs.readFile(process.env.ADVICE_JSON, process.env.FILE_ENCRYPTION, function(err, data) {
+        if (err) {
+            res.send({500: 'Errore durante la richiesta'});
+
+        } else {
+            let obj = JSON.parse(data);
+            res.send(obj);
+        }
     });
 });
 

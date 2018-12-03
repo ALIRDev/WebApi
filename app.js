@@ -13,6 +13,7 @@ const playersRouter = require('./routes/players');
 const vehiclesRouter = require('./routes/vehicles');
 const gangsRouter = require('./routes/gangs');
 const wantedRouter = require('./routes/wanted');
+const donationsRouter = require('./routes/donations');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/players', playersRouter);
 app.use('/vehicles', vehiclesRouter);
 app.use('/gangs', gangsRouter);
 app.use('/wanted', wantedRouter);
+app.use('/donations', donationsRouter);
 
 // Swagger documentation for Web API
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
